@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人官网 | Vibe Coding 实战</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <style>
+    /* ============================================
+       全局样式与 CSS 变量
+       ============================================ */
+    :root {
+      /* 浅色主题 */
+      --bg: #ffffff;
+      --bg-alt: #f5f7fa;
+      --text: #1a1a2e;
+      --text-secondary: #555;
+      --primary: #6c63ff;
+      --primary-light: #8b83ff;
+      --card-bg: #ffffff;
+      --card-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --border: #e0e0e0;
+      --tag-bg: #eef0ff;
+      --tag-text: #6c63ff;
+      --gradient: linear-gradient(135deg, #6c63ff, #e84393);
+    }
+
+    [data-theme="dark"] {
+      /* 深色主题 */
+      --bg: #0f0f23;
+      --bg-alt: #1a1a2e;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --primary: #8b83ff;
+      --primary-light: #a99fff;
+      --card-bg: #1a1a2e;
+      --card-shadow: 0 4px 24px rgba(0,0,0,0.3);
+      --border: #333;
+      --tag-bg: #2a2a4e;
+      --tag-text: #8b83ff;
+      --gradient: linear-gradient(135deg, #8b83ff, #ff6b9d);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { color: var(--primary-light); }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ============================================
+       导航栏
+       ============================================ */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    [data-theme="dark"] .navbar {
+      background: rgba(15,15,35,0.85);
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+
+    /* 主题切换按钮 */
+    .theme-toggle {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
+
+    /* 汉堡菜单 */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px; left: 0; right: 0;
+        background: var(--bg);
+        flex-direction: column;
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--card-shadow);
+      }
+      .nav-links.active { display: flex; }
+    }
+
+    /* ============================================
+       Hero 区域
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 64px;
+    }
+
+    .hero-content {
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .hero-avatar {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: var(--gradient);
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      box-shadow: 0 8px 32px rgba(108,99,255,0.3);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .hero .bio {
+      max-width: 600px;
+      margin: 16px auto 32px;
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108,99,255,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ============================================
+       通用区块
+       ============================================ */
+    .section {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-title span {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-alt {
+      background: var(--bg-alt);
+    }
+
+    /* ============================================
+       技能展示
+       ============================================ */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+    }
+
+    .skill-tag {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 12px 20px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+    .skill-tag:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(108,99,255,0.2);
+    }
+
+    /* ============================================
+       项目卡片
+       ============================================ */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .project-card .emoji {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .project-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+    .project-card p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .project-tags span {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* ============================================
+       时间线
+       ============================================ */
+    .timeline {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 56px;
+      margin-bottom: 36px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 12px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    .timeline-item .year {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .timeline-item h3 {
+      font-size: 1.05rem;
+      margin: 4px 0;
+    }
+    .timeline-item p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+
+    /* ============================================
+       工具区域 (Markdown → HTML)
+       ============================================ */
+    .tool-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .tool-box textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-bottom: 16px;
+    }
+    .tool-box textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .tool-output {
+      margin-top: 16px;
+      padding: 20px;
+      background: var(--bg-alt);
+      border-radius: 10px;
+      min-height: 120px;
+      border: 1px solid var(--border);
+    }
+
+    .tool-output h1 { font-size: 1.6rem; margin: 12px 0 8px; }
+    .tool-output h2 { font-size: 1.3rem; margin: 10px 0 6px; }
+    .tool-output h3 { font-size: 1.1rem; margin: 8px 0 4px; }
+    .tool-output p { margin: 8px 0; }
+    .tool-output ul { margin: 8px 0 8px 24px; }
+    .tool-output li { margin: 4px 0; }
+    .tool-output strong { font-weight: 700; }
+
+    /* ============================================
+       笔记管理样式
+       ============================================ */
+    .notes-header {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .notes-header input,
+    .notes-header textarea {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .notes-header textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .notes-header input:focus,
+    .notes-header textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .note-item {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .note-item .note-content {
+      flex: 1;
+    }
+    .note-item .note-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .note-item .note-text {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+    }
+    .note-item .note-date {
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+    .note-item .note-delete {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .note-item .note-delete:hover { opacity: 1; }
+    .empty-notes {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+
+    /* ============================================
+       页脚
+       ============================================ */
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .footer .vibe-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 16px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ============================================
+       滚动动画
+       ============================================ */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== 导航栏 ========== -->
+  <nav class="navbar" role="navigation">
+    <div class="container">
+      <div class="logo">✦ Portfolio</div>
+      <button class="hamburger" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">关于</a></li>
+        <li><a href="#skills">技能</a></li>
+        <li><a href="#projects">项目</a></li>
+        <li><a href="#timeline">历程</a></li>
+        <li><a href="#tools">工具</a></li>
+        <li><a href="#notes">笔记</a></li>
+        <li>
+          <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+            🌙
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== Hero ========== -->
+  <section class="hero" id="about">
+    <div class="container hero-content">
+      <div class="hero-avatar">🤖</div>
+      <h1>你好，我是开发者</h1>
+      <p class="subtitle">全栈开发者 / AI 爱好者</p>
+      <p class="bio">
+        热爱用代码创造价值，正在探索 <strong>Vibe Coding</strong> 的全新开发范式。
+        这个网站就是我用 AI 辅助从零到一构建的实战项目。
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">🚀 查看项目</a>
+        <a href="#tools" class="btn btn-outline">🛠 体验工具</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 技能 ========== -->
+  <section class="section section-alt" id="skills">
+    <div class="container">
+      <h2 class="section-title fade-in"><span>⚡</span> 技能栈</h2>
+      <div class="skills-grid fade-in" id="skillsGrid">
+        <!-- JS 动态渲染 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 项目 ========== -->
+  <section class="section" id="projects">
+    <div class="container">
+      <h2 class="section-title fade-in"><span>📦</span> 项目展示</h2>
+      <div class="projects-grid fade-in" id="projectsGrid">
+        <!-- JS 动态渲染 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 历程时间线 ========== -->
+  <section class="section section-alt" id="timeline">
+    <div class="container">
+      <h2 class="section-title fade-in"><span>📅</span> 学习历程</h2>
+      <div class="timeline fade-in" id="timelineContainer">
+        <!-- JS 动态渲染 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 工具 ========== -->
+  <section class="section" id="tools">
+    <div class="container">
+      <h2 class="section-title fade-in"><span>🛠</span> 在线工具</h2>
+      <div class="tool-box fade-in">
+        <h3 style="margin-bottom:12px;">🔄 Markdown → HTML 转换器</h3>
+        <p style="color:var(--text-secondary);margin-bottom:16px;font-size:0.92rem;">
+          在左侧输入 Markdown，点击转换，右侧实时预览 HTML 效果。
+        </p>
+        <textarea id="mdInput" placeholder="输入 Markdown 语法...
+
+# 标题
+**加粗文字**
+- 列表项 1
+- 列表项 2"></textarea>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="convertMarkdown()">🔄 转换</button>
+          <button class="btn btn-outline" onclick="clearMarkdown()">🗑 清空</button>
+        </div>
+        <div class="tool-output" id="mdOutput">
+          等待转换...
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 笔记管理 ========== -->
+  <section class="section section-alt" id="notes">
+    <div class="container">
+      <h2 class="section-title fade-in"><span>📒</span> 学习笔记</h2>
+      <div class="tool-box fade-in">
+        <h3 style="margin-bottom:12px;">✏️ 快速记笔记</h3>
+        <p style="color:var(--text-secondary);margin-bottom:16px;font-size:0.92rem;">
+          记录你的学习心得，保存在本地服务器中。
+        </p>
+        <div class="notes-header">
+          <input id="noteTitle" placeholder="笔记标题" />
+        </div>
+        <div class="notes-header">
+          <textarea id="noteContent" placeholder="写下你的笔记内容...&#10;&#10;支持 Markdown 语法"></textarea>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+          <button class="btn btn-primary" onclick="createNote()">💾 保存笔记</button>
+        </div>
+        <div id="notesList" class="notes-list">
+          <div class="empty-notes">📭 暂无笔记，开始记录吧！</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 页脚 ========== -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 Vibe Coding Portfolio</p>
+      <span class="vibe-badge">🎵 Built with Vibe Coding</span>
+    </div>
+  </footer>
+
+  <script>
+    // =============================================
+    // 配置数据
+    // =============================================
+    const SKILLS = ['Node.js', 'React', 'Python', 'Docker', 'AI/LLM', 'TypeScript', 'Express', 'Git'];
+
+    const PROJECTS = [
+      { emoji: '🌐', title: '个人官网', desc: '使用 Express + 原生 JS 构建的响应式个人网站，支持深色模式、在线工具', tags: ['Node.js', 'CSS3', 'Vibe Coding'] },
+      { emoji: '🤖', title: 'AI 聊天助手', desc: '基于 LLM API 的智能对话机器人，支持上下文记忆与流式输出', tags: ['AI', 'API', 'JavaScript'] },
+      { emoji: '📝', title: 'Markdown 工具集', desc: '所见即所得的 Markdown 编辑器，支持实时预览、导出 HTML', tags: ['工具', 'Node.js'] },
+    ];
+
+    const TIMELINE = [
+      { year: '2025', event: '参加 AI 青年特训营', desc: '系统学习 Vibe Coding 与 AI 开发工具' },
+      { year: '2025', event: '完成首个 Vibe Coding 项目', desc: '从零到一构建个人官网与实用工具' },
+      { year: '2026', event: '持续精进', desc: '探索更多 AI 辅助开发的可能性' },
+    ];
+
+    // =============================================
+    // 渲染技能
+    // =============================================
+    function renderSkills() {
+      const grid = document.getElementById('skillsGrid');
+      grid.innerHTML = SKILLS.map(s => `<div class="skill-tag">${s}</div>`).join('');
+    }
+
+    // =============================================
+    // 渲染项目
+    // =============================================
+    function renderProjects() {
+      const grid = document.getElementById('projectsGrid');
+      grid.innerHTML = PROJECTS.map(p => `
+        <div class="project-card">
+          <div class="emoji">${p.emoji}</div>
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <div class="project-tags">
+            ${p.tags.map(t => `<span>${t}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // =============================================
+    // 渲染时间线
+    // =============================================
+    function renderTimeline() {
+      const container = document.getElementById('timelineContainer');
+      container.innerHTML = TIMELINE.map(t => `
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <span class="year">${t.year}</span>
+          <h3>${t.event}</h3>
+          <p>${t.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    // =============================================
+    // 笔记管理（CRUD）
+    // =============================================
+    async function loadNotes() {
+      try {
+        const res = await fetch('/api/notes');
+        const notes = await res.json();
+        const list = document.getElementById('notesList');
+
+        if (notes.length === 0) {
+          list.innerHTML = '<div class="empty-notes">📭 暂无笔记，开始记录吧！</div>';
+          return;
+        }
+
+        list.innerHTML = notes.map(n => `
+          <div class="note-item">
+            <div class="note-content">
+              <div class="note-title">${escapeHtml(n.title)}</div>
+              <div class="note-text">${escapeHtml(n.content)}</div>
+              <div class="note-date">🕐 ${new Date(n.createdAt).toLocaleString('zh-CN')}</div>
+            </div>
+            <button class="note-delete" onclick="deleteNote('${n.id}')" title="删除">✕</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('加载笔记失败:', err);
+      }
+    }
+
+    async function createNote() {
+      const title = document.getElementById('noteTitle').value.trim();
+      const content = document.getElementById('noteContent').value.trim();
+
+      if (!title || !content) {
+        alert('请填写标题和内容！');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content })
+        });
+
+        if (res.ok) {
+          document.getElementById('noteTitle').value = '';
+          document.getElementById('noteContent').value = '';
+          loadNotes();
+        }
+      } catch (err) {
+        console.error('创建笔记失败:', err);
+      }
+    }
+
+    async function deleteNote(id) {
+      if (!confirm('确定删除这条笔记？')) return;
+      try {
+        const res = await fetch(`/api/notes/${id}`, { method: 'DELETE' });
+        if (res.ok) loadNotes();
+      } catch (err) {
+        console.error('删除笔记失败:', err);
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // =============================================
+    // Markdown → HTML 转换（客户端版）
+    // =============================================
+    function convertMarkdown() {
+      const input = document.getElementById('mdInput').value;
+      const output = document.getElementById('mdOutput');
+
+      if (!input.trim()) {
+        output.innerHTML = '<p style="color:var(--text-secondary);">请先输入 Markdown 内容 ✍️</p>';
+        return;
+      }
+
+      // 简单的 Markdown 解析
+      let html = input
+        // 标题
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        // 粗体和斜体
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        // 行内代码
+        .replace(/`(.+?)`/g, '<code style="background:var(--tag-bg);padding:2px 6px;border-radius:4px;font-size:0.9em;">$1</code>')
+        // 无序列表
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+        // 换行转段落
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^(.+)$/gm, (m) => {
+          if (m.startsWith('<')) return m;
+          return `<p>${m}</p>`;
+        });
+
+      output.innerHTML = html || '<p style="color:var(--text-secondary);">转换完成（空结果）</p>';
+    }
+
+    function clearMarkdown() {
+      document.getElementById('mdInput').value = '';
+      document.getElementById('mdOutput').innerHTML = '等待转换...';
+    }
+
+    // =============================================
+    // 深色/浅色主题切换
+    // =============================================
+    function initTheme() {
+      const saved = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      updateThemeButton(saved);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeButton(next);
+    }
+
+    function updateThemeButton(theme) {
+      const btn = document.getElementById('themeToggle');
+      btn.textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+
+    // =============================================
+    // 移动端汉堡菜单
+    // =============================================
+    function initMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.getElementById('navLinks');
+
+      hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+      });
+
+      // 点击链接后关闭菜单
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('active');
+        });
+      });
+    }
+
+    // =============================================
+    // 滚动动画 (Intersection Observer)
+    // =============================================
+    function initScrollAnimation() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }
+
+    // =============================================
+    // 初始化
+    // =============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSkills();
+      renderProjects();
+      renderTimeline();
+      loadNotes();  // 加载笔记
+      initTheme();
+      initMobileMenu();
+      initScrollAnimation();
+
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+      // Ctrl+Enter 快捷键转换
+      document.getElementById('mdInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          convertMarkdown();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+const express = require('express');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// ============================================
+// 中间件
+// ============================================
+
+// 解析 JSON 请求体
+app.use(express.json());
+
+// 静态文件服务（CSS、JS、图片等）
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ============================================
+// API 路由
+// ============================================
+
+// 获取个人资料信息（模拟数据，后续可连接数据库）
+app.get('/api/profile', (req, res) => {
+  res.json({
+    name: '你的名字',
+    title: '全栈开发者 / AI 爱好者',
+    bio: '热爱用代码创造价值，正在探索 Vibe Coding 的全新开发范式。',
+    skills: ['Node.js', 'React', 'Python', 'Docker', 'AI/LLM', 'TypeScript'],
+    social: {
+      github: 'https://github.com/yourname',
+      email: 'yourname@example.com'
+    }
+  });
+});
+
+// ============================================
+// 工具：Markdown 笔记转 HTML
+// ============================================
+
+app.post('/api/tools/md-to-html', (req, res) => {
+  const { markdown } = req.body;
+  if (!markdown) {
+    return res.status(400).json({ error: '请提供 Markdown 内容' });
+  }
+
+  // 极简 Markdown 解析（后续可引入 marked 库）
+  const html = markdown
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(.+)$/gm, (m) => {
+      if (m.startsWith('<')) return m;
+      return `<p>${m}</p>`;
+    });
+
+  res.json({ html, raw: markdown });
+});
+
+// ============================================
+// 工具：学习时间线生成
+// ============================================
+
+app.get('/api/tools/timeline', (req, res) => {
+  const timeline = [
+    { year: '2025', event: '参加 AI 青年特训营', desc: '系统学习 Vibe Coding 与 AI 开发工具' },
+    { year: '2025', event: '完成首个 Vibe Coding 项目', desc: '从零到一构建个人官网与实用工具' },
+    { year: '2026', event: '持续精进', desc: '探索更多 AI 辅助开发的可能性' },
+  ];
+  res.json(timeline);
+});
+
+// ============================================
+// 工具：学习笔记管理（文件存储版）
+// ============================================
+
+const NOTES_FILE = path.join(__dirname, 'data', 'notes.json');
+
+// 确保数据目录存在
+function ensureDataDir() {
+  const dir = path.join(__dirname, 'data');
+  if (!require('fs').existsSync(dir)) {
+    require('fs').mkdirSync(dir, { recursive: true });
+  }
+  if (!require('fs').existsSync(NOTES_FILE)) {
+    require('fs').writeFileSync(NOTES_FILE, '[]', 'utf-8');
+  }
+}
+
+// 读取所有笔记
+function readNotes() {
+  ensureDataDir();
+  const raw = require('fs').readFileSync(NOTES_FILE, 'utf-8');
+  return JSON.parse(raw);
+}
+
+// 保存笔记
+function saveNotes(notes) {
+  ensureDataDir();
+  require('fs').writeFileSync(NOTES_FILE, JSON.stringify(notes, null, 2), 'utf-8');
+}
+
+// 获取所有笔记
+app.get('/api/notes', (req, res) => {
+  try {
+    const notes = readNotes();
+    res.json(notes);
+  } catch (err) {
+    res.status(500).json({ error: '读取笔记失败', detail: err.message });
+  }
+});
+
+// 创建笔记
+app.post('/api/notes', (req, res) => {
+  try {
+    const { title, content, tags } = req.body;
+    if (!title || !content) {
+      return res.status(400).json({ error: '标题和内容不能为空' });
+    }
+    const notes = readNotes();
+    const newNote = {
+      id: Date.now().toString(),
+      title,
+      content,
+      tags: tags || [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    notes.unshift(newNote);
+    saveNotes(notes);
+    res.status(201).json(newNote);
+  } catch (err) {
+    res.status(500).json({ error: '创建笔记失败', detail: err.message });
+  }
+});
+
+// 删除笔记
+app.delete('/api/notes/:id', (req, res) => {
+  try {
+    let notes = readNotes();
+    const len = notes.length;
+    notes = notes.filter(n => n.id !== req.params.id);
+    if (notes.length === len) {
+      return res.status(404).json({ error: '笔记不存在' });
+    }
+    saveNotes(notes);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: '删除笔记失败', detail: err.message });
+  }
+});
+
+// ============================================
+// SPA 回退路由（所有非 API 请求返回 index.html）
+// ============================================
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ============================================
+// 启动服务器
+// ============================================
+
+app.listen(PORT, () => {
+  console.log(`🚀 个人官网已启动！`);
+  console.log(`   本地地址: http://localhost:${PORT}`);
+  console.log(`   按 Ctrl+C 停止服务器`);
+});
