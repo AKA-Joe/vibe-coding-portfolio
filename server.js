@@ -154,6 +154,45 @@ app.delete('/api/notes/:id', (req, res) => {
 });
 
 // ============================================
+// 🥷 隐藏彩蛋 — 武林秘籍 API
+// ============================================
+
+const WUXIA_QUOTES = [
+  { quote: '侠之大者，为国为民', source: '金庸《神雕侠侣》郭靖' },
+  { quote: '他强由他强，清风拂山岗；他横由他横，明月照大江', source: '金庸《倚天屠龙记》九阳神功' },
+  { quote: '手中无剑，心中有剑', source: '金庸《神雕侠侣》独孤求败' },
+  { quote: '问世间，情是何物，直教生死相许', source: '金庸《神雕侠侣》李莫愁' },
+  { quote: '人在江湖，身不由己', source: '古龙《三少爷的剑》' },
+  { quote: '天下武功，无坚不摧，唯快不破', source: '古龙《小李飞刀》' },
+  { quote: '小李飞刀，例不虚发', source: '古龙《多情剑客无情剑》' },
+  { quote: '真正的敌人，永远是你自己', source: '古龙' },
+  { quote: '剑是冷的，人心更冷', source: '古龙' },
+  { quote: '飞雪连天射白鹿，笑书神侠倚碧鸳', source: '金庸 十四字对联' },
+  { quote: '侠之大者，为码为民', source: '数字江湖·佚名' },
+  { quote: '手中无码，心中有码 — 此乃编程最高境界', source: '数字江湖·佚名' },
+  { quote: '他Bug由他Bug，我自一行行', source: '数字江湖·九阳神功改' },
+  { quote: '人在职场，CRUD不由己', source: '数字江湖·古龙风' },
+  { quote: '天下代码，无坚不摧，唯快不破 — 敏捷开发真谛', source: '数字江湖·古龙风' },
+];
+
+app.get('/api/secret/quote', (req, res) => {
+  const q = WUXIA_QUOTES[Math.floor(Math.random() * WUXIA_QUOTES.length)];
+  res.json(q);
+});
+
+app.get('/api/secret/sword', (req, res) => {
+  const techniques = [
+    { name: '独孤九剑·破气式', desc: '以无招胜有招，破尽天下代码 Bug' },
+    { name: '乾坤大挪移·第七层', desc: 'Git Rebase 秘技，移形换影于各分支之间' },
+    { name: '六脉神剑·少商剑', desc: 'Vim 快捷键之神，手不离键盘而代码自出' },
+    { name: '降龙十八掌·亢龙有悔', desc: '一次 Commit 顶十八次，力拔山兮气盖世' },
+    { name: '凌波微步·逍遥游', desc: '在 Docker 容器间腾挪辗转，片叶不沾身' },
+    { name: '北冥神功·吸星大法', desc: 'npm install 之理，天下模块尽归我用' },
+  ];
+  res.json(techniques[Math.floor(Math.random() * techniques.length)]);
+});
+
+// ============================================
 // SPA 回退路由（所有非 API 请求返回 index.html）
 // ============================================
 
