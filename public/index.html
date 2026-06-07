@@ -1,63 +1,176 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>个人官网 | Vibe Coding 实战</title>
+  <title>个人官网 | Vibe Coding</title>
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     /* ============================================
-       全局样式与 CSS 变量
+       CSS 变量 — 深色主题（默认）
        ============================================ */
     :root {
-      /* 浅色主题 */
-      --bg: #ffffff;
-      --bg-alt: #f5f7fa;
-      --text: #1a1a2e;
-      --text-secondary: #555;
+      --bg-primary: #0a0a1a;
+      --bg-secondary: #0f0f23;
+      --bg-tertiary: rgba(255,255,255,0.03);
+      --glass-bg: rgba(255,255,255,0.05);
+      --glass-border: rgba(255,255,255,0.08);
+      --glass-hover: rgba(255,255,255,0.1);
+      --glass-card: rgba(255,255,255,0.04);
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-tertiary: #64748b;
       --primary: #6c63ff;
-      --primary-light: #8b83ff;
-      --card-bg: #ffffff;
-      --card-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      --border: #e0e0e0;
-      --tag-bg: #eef0ff;
-      --tag-text: #6c63ff;
-      --gradient: linear-gradient(135deg, #6c63ff, #e84393);
+      --primary-light: #818cf8;
+      --primary-glow: rgba(108,99,255,0.3);
+      --accent: #ec4899;
+      --accent-light: #f472b6;
+      --cyan: #06b6d4;
+      --gradient-main: linear-gradient(135deg, #6c63ff, #ec4899);
+      --gradient-card: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(236,72,153,0.1));
+      --gradient-text: linear-gradient(135deg, #6c63ff, #ec4899, #06b6d4);
+      --shadow-glow: 0 0 40px rgba(108,99,255,0.15);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
     }
 
-    [data-theme="dark"] {
-      /* 深色主题 */
-      --bg: #0f0f23;
-      --bg-alt: #1a1a2e;
-      --text: #e0e0e0;
-      --text-secondary: #aaa;
-      --primary: #8b83ff;
-      --primary-light: #a99fff;
-      --card-bg: #1a1a2e;
-      --card-shadow: 0 4px 24px rgba(0,0,0,0.3);
-      --border: #333;
-      --tag-bg: #2a2a4e;
-      --tag-text: #8b83ff;
-      --gradient: linear-gradient(135deg, #8b83ff, #ff6b9d);
+    /* ============================================
+       浅色主题
+       ============================================ */
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #f1f5f9;
+      --bg-tertiary: rgba(0,0,0,0.02);
+      --glass-bg: rgba(255,255,255,0.7);
+      --glass-border: rgba(0,0,0,0.08);
+      --glass-hover: rgba(255,255,255,0.9);
+      --glass-card: rgba(255,255,255,0.5);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #94a3b8;
+      --primary: #6c63ff;
+      --primary-light: #818cf8;
+      --primary-glow: rgba(108,99,255,0.15);
+      --accent: #ec4899;
+      --gradient-main: linear-gradient(135deg, #6c63ff, #ec4899);
+      --gradient-card: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(236,72,153,0.05));
+      --shadow-glow: 0 0 40px rgba(108,99,255,0.08);
     }
 
+    /* ============================================
+       全局重置
+       ============================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      transition: background 0.3s, color 0.3s;
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+      transition: background 0.4s, color 0.4s;
     }
 
-    a { color: var(--primary); text-decoration: none; }
-    a:hover { color: var(--primary-light); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--glass-border);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
+    /* ============================================
+       滚动进度条
+       ============================================ */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: var(--gradient-main);
+      z-index: 1001;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ============================================
+       Canvas 粒子背景
+       ============================================ */
+    #particleCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ============================================
+       鼠标跟随光晕
+       ============================================ */
+    .cursor-glow {
+      position: fixed;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,99,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+    }
+
+    /* ============================================
+       通用工具类
+       ============================================ */
     .container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    a { color: var(--primary-light); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent); }
+
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 56px;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    /* ============================================
+       通用玻璃卡片
+       ============================================ */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+    }
+    .glass:hover {
+      background: var(--glass-hover);
+      border-color: rgba(108,99,255,0.2);
     }
 
     /* ============================================
@@ -66,65 +179,87 @@
     .navbar {
       position: fixed;
       top: 0; left: 0; right: 0;
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(12px);
       z-index: 1000;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.3s;
+      padding: 16px 0;
+      transition: all 0.4s ease;
     }
 
-    [data-theme="dark"] .navbar {
-      background: rgba(15,15,35,0.85);
+    .navbar.scrolled {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 10px 0;
     }
 
     .navbar .container {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 64px;
     }
 
     .logo {
-      font-size: 1.4rem;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
       font-weight: 700;
-      background: var(--gradient);
+      background: var(--gradient-main);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      letter-spacing: -0.03em;
     }
 
     .nav-links {
       display: flex;
-      gap: 28px;
+      gap: 8px;
       align-items: center;
       list-style: none;
     }
 
     .nav-links a {
-      color: var(--text);
-      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
       font-weight: 500;
-      transition: color 0.2s;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+      position: relative;
+      font-family: var(--font-body);
     }
-    .nav-links a:hover { color: var(--primary); }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 50%;
+      width: 0; height: 2px;
+      background: var(--gradient-main);
+      transition: all 0.3s;
+      transform: translateX(-50%);
+      border-radius: 1px;
+    }
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: var(--glass-bg);
+    }
+    .nav-links a:hover::after { width: 60%; }
 
-    /* 主题切换按钮 */
     .theme-toggle {
-      background: var(--bg-alt);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
       border-radius: 50%;
       width: 38px; height: 38px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       font-size: 1.1rem;
       transition: all 0.2s;
+      margin-left: 8px;
     }
     .theme-toggle:hover {
       border-color: var(--primary);
       transform: scale(1.05);
+      box-shadow: 0 0 20px var(--primary-glow);
     }
 
-    /* 汉堡菜单 */
+    /* 移动端抽屉菜单 */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -133,84 +268,155 @@
       background: none;
       border: none;
       padding: 4px;
+      z-index: 1002;
     }
     .hamburger span {
       width: 24px; height: 2px;
-      background: var(--text);
+      background: var(--text-primary);
       border-radius: 2px;
-      transition: 0.3s;
+      transition: all 0.3s;
     }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
     @media (max-width: 768px) {
       .hamburger { display: flex; }
       .nav-links {
-        display: none;
-        position: absolute;
-        top: 64px; left: 0; right: 0;
-        background: var(--bg);
+        position: fixed;
+        top: 0; right: -280px;
+        width: 280px; height: 100vh;
+        background: var(--glass-bg);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border-left: 1px solid var(--glass-border);
         flex-direction: column;
-        padding: 20px;
-        border-bottom: 1px solid var(--border);
-        box-shadow: var(--card-shadow);
+        justify-content: center;
+        gap: 12px;
+        padding: 40px;
+        transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       }
-      .nav-links.active { display: flex; }
+      .nav-links.active {
+        right: 0;
+      }
+      .nav-links a { font-size: 1.1rem; padding: 12px 20px; width: 100%; text-align: center; }
+      .nav-links a::after { display: none; }
+      .theme-toggle { margin-left: 0; margin-top: 8px; }
     }
 
     /* ============================================
-       Hero 区域
+       Hero
        ============================================ */
     .hero {
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding-top: 64px;
+      justify-content: center;
+      position: relative;
+      padding-top: 80px;
     }
 
     .hero-content {
       text-align: center;
-      padding: 60px 0;
+      max-width: 800px;
     }
 
-    .hero-avatar {
-      width: 140px; height: 140px;
-      border-radius: 50%;
-      background: var(--gradient);
-      margin: 0 auto 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: white;
-      box-shadow: 0 8px 32px rgba(108,99,255,0.3);
-      animation: float 3s ease-in-out infinite;
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-family: var(--font-body);
     }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    .hero-badge span {
+      color: var(--primary-light);
     }
 
     .hero h1 {
-      font-size: 2.8rem;
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5rem);
       font-weight: 800;
-      margin-bottom: 12px;
-      background: var(--gradient);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .hero h1 .gradient-text {
+      background: var(--gradient-text);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .hero .subtitle {
+    /* Glitch 故障效果 */
+    .glitch {
+      position: relative;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .glitch:hover::before {
+      opacity: 0.7;
+      color: var(--cyan);
+      clip-path: inset(20% 0 60% 0);
+      animation: glitch-shift 0.3s ease infinite;
+    }
+    .glitch:hover::after {
+      opacity: 0.7;
+      color: var(--accent);
+      clip-path: inset(60% 0 10% 0);
+      animation: glitch-shift 0.3s ease infinite reverse;
+    }
+    @keyframes glitch-shift {
+      0% { transform: translate(0); }
+      25% { transform: translate(-3px, 2px); }
+      50% { transform: translate(2px, -1px); }
+      75% { transform: translate(-2px, 3px); }
+      100% { transform: translate(0); }
+    }
+
+    /* 打字机副标题 */
+    .typewriter-wrap {
+      height: 2em;
+      margin-bottom: 16px;
+    }
+    .typewriter {
       font-size: 1.2rem;
       color: var(--text-secondary);
-      margin-bottom: 8px;
+      font-family: var(--font-display);
+      font-weight: 400;
+    }
+    .typewriter .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.2em;
+      background: var(--primary-light);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: blink 0.7s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     .hero .bio {
-      max-width: 600px;
-      margin: 16px auto 32px;
-      color: var(--text-secondary);
-      font-size: 1.05rem;
+      max-width: 540px;
+      margin: 0 auto 36px;
+      color: var(--text-tertiary);
+      font-size: 1rem;
+      line-height: 1.8;
     }
 
     .hero-actions {
@@ -221,87 +427,192 @@
     }
 
     .btn {
-      padding: 12px 32px;
-      border-radius: 8px;
-      font-size: 1rem;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
       border: none;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      font-family: var(--font-body);
+      position: relative;
+      overflow: hidden;
     }
 
     .btn-primary {
-      background: var(--gradient);
+      background: var(--gradient-main);
       color: white;
     }
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(108,99,255,0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(108,99,255,0.35);
+    }
+    .btn-primary .arrow {
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+    .btn-primary:hover .arrow {
+      transform: translateX(4px);
     }
 
     .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 2px solid var(--border);
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
     }
     .btn-outline:hover {
       border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    /* ============================================
-       通用区块
-       ============================================ */
-    .section {
-      padding: 80px 0;
-    }
-
-    .section-title {
-      font-size: 2rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 48px;
-    }
-    .section-title span {
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .section-alt {
-      background: var(--bg-alt);
-    }
-
-    /* ============================================
-       技能展示
-       ============================================ */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-    }
-
-    .skill-tag {
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      padding: 12px 20px;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.3s;
-    }
-    .skill-tag:hover {
+      background: var(--glass-hover);
       transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(108,99,255,0.2);
+    }
+
+    /* 滚动指示器 */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-tertiary);
+      font-size: 0.75rem;
+      animation: fade-in-down 2s ease infinite;
+    }
+    .scroll-indicator .mouse {
+      width: 22px; height: 34px;
+      border: 2px solid var(--text-tertiary);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      padding-top: 6px;
+    }
+    .scroll-indicator .mouse .dot {
+      width: 3px; height: 8px;
+      background: var(--text-tertiary);
+      border-radius: 2px;
+      animation: scroll-bounce 2s ease infinite;
+    }
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(6px); opacity: 0.3; }
+    }
+    @keyframes fade-in-down {
+      0%, 100% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 1; transform: translateX(-50%) translateY(4px); }
+    }
+
+    /* 浮动几何装饰 */
+    .float-shapes {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .float-shape {
+      position: absolute;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      opacity: 0.4;
+    }
+    .float-shape.square {
+      width: 40px; height: 40px;
+      top: 15%; left: 10%;
+      animation: float-shape 8s ease-in-out infinite;
+    }
+    .float-shape.circle {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      top: 25%; right: 12%;
+      animation: float-shape 10s ease-in-out infinite reverse;
+    }
+    .float-shape.triangle {
+      width: 0; height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 40px solid var(--glass-border);
+      background: none !important;
+      bottom: 30%; left: 8%;
+      animation: float-shape 12s ease-in-out infinite 2s;
+    }
+    .float-shape.ring {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--glass-border);
+      background: none !important;
+      bottom: 20%; right: 18%;
+      animation: float-shape 9s ease-in-out infinite 1s;
+    }
+    @keyframes float-shape {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(-30px) rotate(120deg); }
+      66% { transform: translateY(15px) rotate(240deg); }
     }
 
     /* ============================================
-       项目卡片
+       技能区 — 进度条
+       ============================================ */
+    .skills-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .skill-bar-item {
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+    }
+    .skill-bar-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .skill-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .skill-bar-header .name {
+      font-weight: 500;
+      font-size: 0.92rem;
+      font-family: var(--font-display);
+    }
+    .skill-bar-header .percent {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      font-weight: 500;
+    }
+
+    .skill-bar-track {
+      height: 8px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      background: var(--gradient-main);
+      transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+    .skill-bar-item.visible .skill-bar-fill {
+      /* width set by JS */
+    }
+
+    /* ============================================
+       项目卡片 (3D Tilt)
        ============================================ */
     .projects-grid {
       display: grid;
@@ -310,44 +621,93 @@
     }
 
     .project-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      box-shadow: var(--card-shadow);
-      transition: all 0.3s;
+      perspective: 1000px;
     }
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+
+    .project-card-inner {
+      background: var(--glass-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      transform-style: preserve-3d;
+    }
+
+    .project-card-inner::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: var(--radius-lg);
+      padding: 1px;
+      background: conic-gradient(from var(--angle, 0deg), transparent, var(--primary), var(--accent), transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    .project-card-inner:hover::before {
+      opacity: 1;
+      animation: border-spin 2s linear infinite;
+    }
+    @keyframes border-spin {
+      to { --angle: 360deg; }
+    }
+
+    .project-card-inner:hover {
+      border-color: transparent;
+      background: var(--glass-hover);
     }
 
     .project-card .emoji {
-      font-size: 2rem;
-      margin-bottom: 12px;
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      display: block;
+      transform: translateZ(20px);
     }
     .project-card h3 {
+      font-family: var(--font-display);
       font-size: 1.2rem;
+      font-weight: 600;
       margin-bottom: 8px;
+      transform: translateZ(15px);
     }
     .project-card p {
       color: var(--text-secondary);
-      font-size: 0.92rem;
-      margin-bottom: 16px;
+      font-size: 0.9rem;
+      flex: 1;
+      transform: translateZ(10px);
     }
-
     .project-tags {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      margin-top: 16px;
+      transform: translateZ(20px);
     }
     .project-tags span {
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      padding: 4px 12px;
+      background: var(--glass-bg);
+      color: var(--text-secondary);
+      padding: 4px 14px;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 500;
+      border: 1px solid var(--glass-border);
     }
 
     /* ============================================
@@ -364,220 +724,254 @@
       position: absolute;
       left: 20px;
       top: 0; bottom: 0;
-      width: 2px;
-      background: var(--border);
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--primary), var(--accent), transparent);
     }
 
     .timeline-item {
       position: relative;
       padding-left: 56px;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .timeline-item:nth-child(2) { transition-delay: 0.15s; }
+    .timeline-item:nth-child(3) { transition-delay: 0.3s; }
 
     .timeline-dot {
       position: absolute;
       left: 12px;
-      width: 18px; height: 18px;
+      width: 16px; height: 16px;
       border-radius: 50%;
       background: var(--primary);
-      border: 3px solid var(--bg);
-      box-shadow: 0 0 0 2px var(--primary);
+      box-shadow: 0 0 20px var(--primary-glow);
+      animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 10px var(--primary-glow); }
+      50% { box-shadow: 0 0 25px var(--primary-glow), 0 0 40px rgba(108,99,255,0.15); }
     }
 
     .timeline-item .year {
-      font-size: 0.85rem;
-      color: var(--primary);
+      font-size: 0.8rem;
+      color: var(--primary-light);
       font-weight: 600;
+      font-family: var(--font-display);
+      letter-spacing: 0.05em;
     }
     .timeline-item h3 {
+      font-family: var(--font-display);
       font-size: 1.05rem;
       margin: 4px 0;
+      font-weight: 600;
     }
     .timeline-item p {
-      color: var(--text-secondary);
-      font-size: 0.92rem;
+      color: var(--text-tertiary);
+      font-size: 0.9rem;
     }
 
     /* ============================================
-       工具区域 (Markdown → HTML)
+       工具 & 笔记区域
        ============================================ */
-    .tool-box {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: var(--card-shadow);
+    .glass-box {
+      background: var(--glass-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      transition: all 0.3s;
+    }
+    .glass-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 30px var(--primary-glow);
     }
 
-    .tool-box textarea {
-      width: 100%;
-      min-height: 180px;
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Courier New', monospace;
-      font-size: 0.95rem;
-      resize: vertical;
-      margin-bottom: 16px;
+    .glass-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 12px;
     }
-    .tool-box textarea:focus {
+
+    .glass-box .desc {
+      color: var(--text-tertiary);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .glass-box textarea,
+    .glass-box input {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+    .glass-box textarea:focus,
+    .glass-box input:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 20px var(--primary-glow);
     }
+    .glass-box textarea { min-height: 160px; margin-bottom: 16px; }
+    .glass-box input { margin-bottom: 16px; }
 
     .tool-output {
       margin-top: 16px;
       padding: 20px;
-      background: var(--bg-alt);
-      border-radius: 10px;
-      min-height: 120px;
-      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      min-height: 100px;
+      border: 1px solid var(--glass-border);
     }
-
-    .tool-output h1 { font-size: 1.6rem; margin: 12px 0 8px; }
-    .tool-output h2 { font-size: 1.3rem; margin: 10px 0 6px; }
-    .tool-output h3 { font-size: 1.1rem; margin: 8px 0 4px; }
+    .tool-output h1 { font-size: 1.5rem; margin: 10px 0 6px; font-family: var(--font-display); }
+    .tool-output h2 { font-size: 1.2rem; margin: 8px 0 4px; font-family: var(--font-display); }
+    .tool-output h3 { font-size: 1.05rem; margin: 6px 0 3px; font-family: var(--font-display); }
     .tool-output p { margin: 8px 0; }
     .tool-output ul { margin: 8px 0 8px 24px; }
-    .tool-output li { margin: 4px 0; }
-    .tool-output strong { font-weight: 700; }
+    .tool-output li { margin: 4px 0; color: var(--text-secondary); }
 
-    /* ============================================
-       笔记管理样式
-       ============================================ */
-    .notes-header {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .notes-header input,
-    .notes-header textarea {
-      flex: 1;
-      min-width: 200px;
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 0.95rem;
-    }
-    .notes-header textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-    .notes-header input:focus,
-    .notes-header textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
+    /* 笔记列表 */
     .notes-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-top: 20px;
     }
     .note-item {
-      background: var(--bg-alt);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
       padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
+      transition: all 0.3s;
     }
-    .note-item .note-content {
-      flex: 1;
+    .note-item:hover {
+      background: var(--glass-hover);
+      transform: translateY(-2px);
     }
+    .note-item .note-content { flex: 1; }
     .note-item .note-title {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
       margin-bottom: 4px;
+      font-family: var(--font-display);
     }
-    .note-item .note-text {
-      color: var(--text-secondary);
-      font-size: 0.88rem;
-    }
-    .note-item .note-date {
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      margin-top: 4px;
-    }
+    .note-item .note-text { color: var(--text-tertiary); font-size: 0.85rem; }
+    .note-item .note-date { color: var(--text-tertiary); font-size: 0.75rem; margin-top: 4px; }
+
     .note-item .note-delete {
       background: none;
       border: none;
-      color: #e74c3c;
+      color: var(--accent);
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       padding: 4px;
-      opacity: 0.6;
+      opacity: 0.4;
       transition: opacity 0.2s;
     }
     .note-item .note-delete:hover { opacity: 1; }
+
     .empty-notes {
       text-align: center;
       padding: 40px;
-      color: var(--text-secondary);
+      color: var(--text-tertiary);
     }
 
     /* ============================================
        页脚
        ============================================ */
+    .footer-wave {
+      position: relative;
+      height: 80px;
+      overflow: hidden;
+    }
+    .footer-wave svg {
+      position: absolute;
+      bottom: 0;
+      width: 100%; height: 80px;
+    }
+
     .footer {
       text-align: center;
-      padding: 40px 0;
-      border-top: 1px solid var(--border);
-      color: var(--text-secondary);
-      font-size: 0.9rem;
+      padding: 40px 0 60px;
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+      position: relative;
     }
 
     .footer .vibe-badge {
       display: inline-block;
-      margin-top: 8px;
-      padding: 4px 16px;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      margin-top: 10px;
+      padding: 6px 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
     }
 
     /* ============================================
-       滚动动画
+       滚动入场动画 (通用)
        ============================================ */
-    .fade-in {
+    .reveal {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .fade-in.visible {
+    .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
   </style>
 </head>
 <body>
 
+  <!-- 滚动进度条 -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- 粒子 Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- 鼠标跟随光晕 -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
   <!-- ========== 导航栏 ========== -->
-  <nav class="navbar" role="navigation">
+  <nav class="navbar" id="navbar" role="navigation">
     <div class="container">
-      <div class="logo">✦ Portfolio</div>
-      <button class="hamburger" aria-label="菜单">
+      <div class="logo">✦ Vibe Dev</div>
+      <button class="hamburger" id="hamburger" aria-label="菜单">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="#about">关于</a></li>
+        <li><a href="#about">首页</a></li>
         <li><a href="#skills">技能</a></li>
         <li><a href="#projects">项目</a></li>
         <li><a href="#timeline">历程</a></li>
         <li><a href="#tools">工具</a></li>
         <li><a href="#notes">笔记</a></li>
         <li>
-          <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
-            🌙
-          </button>
+          <button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button>
         </li>
       </ul>
     </div>
@@ -585,26 +979,49 @@
 
   <!-- ========== Hero ========== -->
   <section class="hero" id="about">
+    <!-- 浮动装饰 -->
+    <div class="float-shapes">
+      <div class="float-shape square"></div>
+      <div class="float-shape circle"></div>
+      <div class="float-shape triangle"></div>
+      <div class="float-shape ring"></div>
+    </div>
+
     <div class="container hero-content">
-      <div class="hero-avatar">🤖</div>
-      <h1>你好，我是开发者</h1>
-      <p class="subtitle">全栈开发者 / AI 爱好者</p>
+      <div class="hero-badge">
+        <span>✦</span> Vibe Coding 实战项目
+      </div>
+      <h1 class="glitch" data-text="你好，我是开发者">
+        <span class="gradient-text">你好，我是开发者</span>
+      </h1>
+      <div class="typewriter-wrap">
+        <span class="typewriter" id="typewriter"></span><span class="cursor"></span>
+      </div>
       <p class="bio">
         热爱用代码创造价值，正在探索 <strong>Vibe Coding</strong> 的全新开发范式。
-        这个网站就是我用 AI 辅助从零到一构建的实战项目。
+        这个网站由 AI 辅助构建，融合玻璃拟态与动态交互体验。
       </p>
       <div class="hero-actions">
-        <a href="#projects" class="btn btn-primary">🚀 查看项目</a>
-        <a href="#tools" class="btn btn-outline">🛠 体验工具</a>
+        <a href="#projects" class="btn btn-primary">
+          查看项目 <span class="arrow">→</span>
+        </a>
+        <a href="#tools" class="btn btn-outline">
+          体验工具
+        </a>
       </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>向下滚动</span>
+      <div class="mouse"><div class="dot"></div></div>
     </div>
   </section>
 
   <!-- ========== 技能 ========== -->
-  <section class="section section-alt" id="skills">
+  <section class="section" id="skills">
     <div class="container">
-      <h2 class="section-title fade-in"><span>⚡</span> 技能栈</h2>
-      <div class="skills-grid fade-in" id="skillsGrid">
+      <h2 class="section-title reveal">⚡ 技能栈</h2>
+      <div class="skills-container" id="skillsContainer">
         <!-- JS 动态渲染 -->
       </div>
     </div>
@@ -613,18 +1030,18 @@
   <!-- ========== 项目 ========== -->
   <section class="section" id="projects">
     <div class="container">
-      <h2 class="section-title fade-in"><span>📦</span> 项目展示</h2>
-      <div class="projects-grid fade-in" id="projectsGrid">
+      <h2 class="section-title reveal reveal-delay-1">📦 项目展示</h2>
+      <div class="projects-grid" id="projectsGrid">
         <!-- JS 动态渲染 -->
       </div>
     </div>
   </section>
 
   <!-- ========== 历程时间线 ========== -->
-  <section class="section section-alt" id="timeline">
+  <section class="section" id="timeline">
     <div class="container">
-      <h2 class="section-title fade-in"><span>📅</span> 学习历程</h2>
-      <div class="timeline fade-in" id="timelineContainer">
+      <h2 class="section-title reveal">📅 学习历程</h2>
+      <div class="timeline" id="timelineContainer">
         <!-- JS 动态渲染 -->
       </div>
     </div>
@@ -633,12 +1050,10 @@
   <!-- ========== 工具 ========== -->
   <section class="section" id="tools">
     <div class="container">
-      <h2 class="section-title fade-in"><span>🛠</span> 在线工具</h2>
-      <div class="tool-box fade-in">
-        <h3 style="margin-bottom:12px;">🔄 Markdown → HTML 转换器</h3>
-        <p style="color:var(--text-secondary);margin-bottom:16px;font-size:0.92rem;">
-          在左侧输入 Markdown，点击转换，右侧实时预览 HTML 效果。
-        </p>
+      <h2 class="section-title reveal">🛠 在线工具</h2>
+      <div class="glass-box reveal">
+        <h3>🔄 Markdown → HTML 转换器</h3>
+        <p class="desc">输入 Markdown 语法，点击转换即可预览 HTML 效果。</p>
         <textarea id="mdInput" placeholder="输入 Markdown 语法...
 
 # 标题
@@ -649,29 +1064,21 @@
           <button class="btn btn-primary" onclick="convertMarkdown()">🔄 转换</button>
           <button class="btn btn-outline" onclick="clearMarkdown()">🗑 清空</button>
         </div>
-        <div class="tool-output" id="mdOutput">
-          等待转换...
-        </div>
+        <div class="tool-output" id="mdOutput">等待转换...</div>
       </div>
     </div>
   </section>
 
   <!-- ========== 笔记管理 ========== -->
-  <section class="section section-alt" id="notes">
+  <section class="section" id="notes">
     <div class="container">
-      <h2 class="section-title fade-in"><span>📒</span> 学习笔记</h2>
-      <div class="tool-box fade-in">
-        <h3 style="margin-bottom:12px;">✏️ 快速记笔记</h3>
-        <p style="color:var(--text-secondary);margin-bottom:16px;font-size:0.92rem;">
-          记录你的学习心得，保存在本地服务器中。
-        </p>
-        <div class="notes-header">
-          <input id="noteTitle" placeholder="笔记标题" />
-        </div>
-        <div class="notes-header">
-          <textarea id="noteContent" placeholder="写下你的笔记内容...&#10;&#10;支持 Markdown 语法"></textarea>
-        </div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+      <h2 class="section-title reveal reveal-delay-2">📒 学习笔记</h2>
+      <div class="glass-box reveal">
+        <h3>✏️ 快速记笔记</h3>
+        <p class="desc">记录你的学习心得，保存在本地服务器中。</p>
+        <input id="noteTitle" placeholder="笔记标题" />
+        <textarea id="noteContent" placeholder="写下你的笔记内容...&#10;&#10;支持 Markdown 语法"></textarea>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
           <button class="btn btn-primary" onclick="createNote()">💾 保存笔记</button>
         </div>
         <div id="notesList" class="notes-list">
@@ -681,7 +1088,13 @@
     </div>
   </section>
 
-  <!-- ========== 页脚 ========== -->
+  <!-- ========== 页脚波浪 ========== -->
+  <div class="footer-wave">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1350,40 1440,40 L1440,80 L0,80 Z" fill="var(--glass-border)" opacity="0.3"/>
+      <path d="M0,50 C240,30 480,70 720,50 C960,30 1200,70 1440,50 L1440,80 L0,80 Z" fill="var(--bg-secondary)" opacity="0.5"/>
+    </svg>
+  </div>
   <footer class="footer">
     <div class="container">
       <p>© 2025 Vibe Coding Portfolio</p>
@@ -693,10 +1106,19 @@
     // =============================================
     // 配置数据
     // =============================================
-    const SKILLS = ['Node.js', 'React', 'Python', 'Docker', 'AI/LLM', 'TypeScript', 'Express', 'Git'];
+    const SKILLS = [
+      { name: 'Node.js', level: 85 },
+      { name: 'React', level: 80 },
+      { name: 'Python', level: 75 },
+      { name: 'Docker', level: 70 },
+      { name: 'AI / LLM', level: 78 },
+      { name: 'TypeScript', level: 82 },
+      { name: 'Express', level: 88 },
+      { name: 'Git', level: 85 },
+    ];
 
     const PROJECTS = [
-      { emoji: '🌐', title: '个人官网', desc: '使用 Express + 原生 JS 构建的响应式个人网站，支持深色模式、在线工具', tags: ['Node.js', 'CSS3', 'Vibe Coding'] },
+      { emoji: '🌐', title: '个人官网', desc: '使用 Express + 原生 JS 构建的响应式个人网站，支持深色模式、在线工具、3D 卡片交互', tags: ['Node.js', 'CSS3', 'Vibe Coding'] },
       { emoji: '🤖', title: 'AI 聊天助手', desc: '基于 LLM API 的智能对话机器人，支持上下文记忆与流式输出', tags: ['AI', 'API', 'JavaScript'] },
       { emoji: '📝', title: 'Markdown 工具集', desc: '所见即所得的 Markdown 编辑器，支持实时预览、导出 HTML', tags: ['工具', 'Node.js'] },
     ];
@@ -708,28 +1130,294 @@
     ];
 
     // =============================================
-    // 渲染技能
+    // Canvas 粒子系统
     // =============================================
-    function renderSkills() {
-      const grid = document.getElementById('skillsGrid');
-      grid.innerHTML = SKILLS.map(s => `<div class="skill-tag">${s}</div>`).join('');
+    function initParticles() {
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let mouse = { x: -1000, y: -1000 };
+      let animId;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      function createParticles(count) {
+        particles = [];
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            r: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.4 + 0.1,
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const theme = document.documentElement.getAttribute('data-theme');
+        const color = theme === 'light' ? '108,99,255' : '130,150,220';
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+
+          // 移动
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // 边界回弹
+          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+          // 绘制粒子
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${color}, ${p.alpha})`;
+          ctx.fill();
+
+          // 连线
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 150;
+
+            if (dist < maxDist) {
+              const alpha = (1 - dist / maxDist) * 0.2;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(${color}, ${alpha})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+
+          // 鼠标附近连线
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 180) {
+            const alpha = (1 - dist / 180) * 0.4;
+            ctx.beginPath();
+            ctx.moveTo(mouse.x, mouse.y);
+            ctx.lineTo(p.x, p.y);
+            ctx.strokeStyle = `rgba(${color}, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+
+          // 鼠标附近粒子高亮
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r * 2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${color}, 0.4)`;
+            ctx.fill();
+          }
+        }
+
+        animId = requestAnimationFrame(draw);
+      }
+
+      function onMouseMove(e) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      }
+
+      function onResize() {
+        resize();
+        createParticles(120);
+      }
+
+      resize();
+      createParticles(120);
+      draw();
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('resize', onResize);
+
+      return () => {
+        cancelAnimationFrame(animId);
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('resize', onResize);
+      };
     }
 
     // =============================================
-    // 渲染项目
+    // 鼠标跟随光晕
     // =============================================
-    function renderProjects() {
-      const grid = document.getElementById('projectsGrid');
-      grid.innerHTML = PROJECTS.map(p => `
-        <div class="project-card">
-          <div class="emoji">${p.emoji}</div>
-          <h3>${p.title}</h3>
-          <p>${p.desc}</p>
-          <div class="project-tags">
-            ${p.tags.map(t => `<span>${t}</span>`).join('')}
+    function initCursorGlow() {
+      const glow = document.getElementById('cursorGlow');
+      let x = window.innerWidth / 2, y = window.innerHeight / 2;
+      let targetX = x, targetY = y;
+
+      function update() {
+        x += (targetX - x) * 0.06;
+        y += (targetY - y) * 0.06;
+        glow.style.transform = `translate(${x - 200}px, ${y - 200}px)`;
+        requestAnimationFrame(update);
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+      });
+
+      update();
+    }
+
+    // =============================================
+    // 滚动进度条
+    // =============================================
+    function initScrollProgress() {
+      const bar = document.getElementById('scrollProgress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        bar.style.width = progress + '%';
+      });
+    }
+
+    // =============================================
+    // 导航栏滚动效果
+    // =============================================
+    function initNavbar() {
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+    }
+
+    // =============================================
+    // 打字机效果
+    // =============================================
+    function initTypewriter() {
+      const el = document.getElementById('typewriter');
+      const lines = [
+        '全栈开发者 / AI 爱好者',
+        '用代码创造价值 ✨',
+        'Vibe Coding 践行者',
+        '持续学习中 🚀',
+      ];
+      let lineIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+
+      function type() {
+        const currentLine = lines[lineIndex];
+        if (!isDeleting) {
+          el.textContent = currentLine.slice(0, charIndex + 1);
+          charIndex++;
+          if (charIndex === currentLine.length) {
+            setTimeout(() => { isDeleting = true; type(); }, 2000);
+            return;
+          }
+          setTimeout(type, 60 + Math.random() * 40);
+        } else {
+          el.textContent = currentLine.slice(0, charIndex - 1);
+          charIndex--;
+          if (charIndex === 0) {
+            isDeleting = false;
+            lineIndex = (lineIndex + 1) % lines.length;
+            setTimeout(type, 400);
+            return;
+          }
+          setTimeout(type, 30);
+        }
+      }
+
+      type();
+    }
+
+    // =============================================
+    // 渲染技能进度条
+    // =============================================
+    function renderSkills() {
+      const container = document.getElementById('skillsContainer');
+      container.innerHTML = SKILLS.map((s, i) => `
+        <div class="skill-bar-item reveal reveal-delay-${Math.min(i, 4)}">
+          <div class="skill-bar-header">
+            <span class="name">${s.name}</span>
+            <span class="percent">${s.level}%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-level="${s.level}" style="width:0%"></div>
           </div>
         </div>
       `).join('');
+    }
+
+    // =============================================
+    // 技能进度条入场动画（滚动触发）
+    // =============================================
+    function animateSkillBars() {
+      const items = document.querySelectorAll('.skill-bar-item');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            const fill = entry.target.querySelector('.skill-bar-fill');
+            const level = fill.dataset.level;
+            setTimeout(() => { fill.style.width = level + '%'; }, 200);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      items.forEach(el => observer.observe(el));
+    }
+
+    // =============================================
+    // 渲染项目卡片
+    // =============================================
+    function renderProjects() {
+      const grid = document.getElementById('projectsGrid');
+      grid.innerHTML = PROJECTS.map((p, i) => `
+        <div class="project-card reveal reveal-delay-${Math.min(i + 1, 4)}">
+          <div class="project-card-inner" data-tilt>
+            <span class="emoji">${p.emoji}</span>
+            <h3>${p.title}</h3>
+            <p>${p.desc}</p>
+            <div class="project-tags">
+              ${p.tags.map(t => `<span>${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      initTilt();
+    }
+
+    // =============================================
+    // 3D 卡片倾斜效果 (Vanilla JS)
+    // =============================================
+    function initTilt() {
+      document.querySelectorAll('[data-tilt]').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+        });
+      });
     }
 
     // =============================================
@@ -748,7 +1436,39 @@
     }
 
     // =============================================
-    // 笔记管理（CRUD）
+    // 时间线滚动动画
+    // =============================================
+    function animateTimeline() {
+      const items = document.querySelectorAll('.timeline-item');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.2 });
+
+      items.forEach(el => observer.observe(el));
+    }
+
+    // =============================================
+    // 通用滚动入场 (reveal)
+    // =============================================
+    function initReveal() {
+      const els = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      els.forEach(el => observer.observe(el));
+    }
+
+    // =============================================
+    // 笔记管理 (CRUD)
     // =============================================
     async function loadNotes() {
       try {
@@ -819,39 +1539,33 @@
     }
 
     // =============================================
-    // Markdown → HTML 转换（客户端版）
+    // Markdown → HTML 转换
     // =============================================
     function convertMarkdown() {
       const input = document.getElementById('mdInput').value;
       const output = document.getElementById('mdOutput');
 
       if (!input.trim()) {
-        output.innerHTML = '<p style="color:var(--text-secondary);">请先输入 Markdown 内容 ✍️</p>';
+        output.innerHTML = '<p style="color:var(--text-tertiary);">请先输入 Markdown 内容 ✍️</p>';
         return;
       }
 
-      // 简单的 Markdown 解析
       let html = input
-        // 标题
         .replace(/^### (.+)$/gm, '<h3>$1</h3>')
         .replace(/^## (.+)$/gm, '<h2>$1</h2>')
         .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-        // 粗体和斜体
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        // 行内代码
-        .replace(/`(.+?)`/g, '<code style="background:var(--tag-bg);padding:2px 6px;border-radius:4px;font-size:0.9em;">$1</code>')
-        // 无序列表
+        .replace(/`(.+?)`/g, '<code style="background:var(--glass-bg);padding:2px 6px;border-radius:4px;font-size:0.9em;">$1</code>')
         .replace(/^- (.+)$/gm, '<li>$1</li>')
         .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
-        // 换行转段落
         .replace(/\n\n/g, '</p><p>')
         .replace(/^(.+)$/gm, (m) => {
           if (m.startsWith('<')) return m;
           return `<p>${m}</p>`;
         });
 
-      output.innerHTML = html || '<p style="color:var(--text-secondary);">转换完成（空结果）</p>';
+      output.innerHTML = html || '<p style="color:var(--text-tertiary);">转换完成（空结果）</p>';
     }
 
     function clearMarkdown() {
@@ -863,7 +1577,7 @@
     // 深色/浅色主题切换
     // =============================================
     function initTheme() {
-      const saved = localStorage.getItem('theme') || 'light';
+      const saved = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
       updateThemeButton(saved);
     }
@@ -878,58 +1592,59 @@
 
     function updateThemeButton(theme) {
       const btn = document.getElementById('themeToggle');
-      btn.textContent = theme === 'light' ? '🌙' : '☀️';
+      btn.textContent = theme === 'light' ? '☀️' : '🌙';
     }
 
     // =============================================
-    // 移动端汉堡菜单
+    // 移动端菜单
     // =============================================
     function initMobileMenu() {
-      const hamburger = document.querySelector('.hamburger');
+      const hamburger = document.getElementById('hamburger');
       const navLinks = document.getElementById('navLinks');
 
       hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
       });
 
-      // 点击链接后关闭菜单
       navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
           navLinks.classList.remove('active');
         });
       });
     }
 
     // =============================================
-    // 滚动动画 (Intersection Observer)
-    // =============================================
-    function initScrollAnimation() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.1 });
-
-      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    }
-
-    // =============================================
-    // 初始化
+    // 初始化入口
     // =============================================
     document.addEventListener('DOMContentLoaded', () => {
+      // 渲染
       renderSkills();
       renderProjects();
       renderTimeline();
-      loadNotes();  // 加载笔记
-      initTheme();
-      initMobileMenu();
-      initScrollAnimation();
 
+      // 动画 & 交互
+      initParticles();
+      initCursorGlow();
+      initScrollProgress();
+      initNavbar();
+      initTypewriter();
+      initReveal();
+      animateSkillBars();
+      animateTimeline();
+
+      // 主题
+      initTheme();
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
-      // Ctrl+Enter 快捷键转换
+      // 移动端
+      initMobileMenu();
+
+      // 笔记
+      loadNotes();
+
+      // Markdown 快捷键
       document.getElementById('mdInput').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
           convertMarkdown();
@@ -937,6 +1652,5 @@
       });
     });
   </script>
-
 </body>
 </html>
