@@ -1143,6 +1143,64 @@
     }
     .footer-code .green { color: var(--tg-green); }
 
+    .footer-meme {
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      position: relative;
+      display: inline-block;
+      cursor: default;
+    }
+    .footer-meme .meme-trigger {
+      color: var(--text-dim);
+      opacity: 0.5;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .footer-meme:hover .meme-trigger {
+      opacity: 1;
+      color: var(--vermillion);
+    }
+    .footer-meme .meme-popup {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: 10;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    .footer-meme .meme-popup::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--border);
+    }
+    .footer-meme:hover .meme-popup {
+      display: block;
+    }
+    .meme-popup .meme-shout {
+      color: var(--vermillion);
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .meme-popup .meme-reply {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
     /* ============================================
        彩蛋 — 武林秘籍弹出层
        ============================================ */
@@ -1770,6 +1828,13 @@
       <div class="footer-qoute">以键盘为剑 · 以代码为招</div>
       <div class="footer-seal"><span>码</span></div>
       <div class="footer-code"><span class="green">>_</span> Vibe Coding · <span id="footerYear">2025</span></div>
+      <div class="footer-meme" onclick="showToast('😠 你为啥直接 commit 到我的 master 分支啊！！！\n\n📜 版本沿革：\nv1-basic 😠 你为什么直接commit到我的master分支！！！\nv2-dify  😰 这次我创feature分支了！\nv3-full  😎 算了直接merge回main吧','info',5000)">
+        <span class="meme-trigger">🔖 版本谱</span>
+        <div class="meme-popup">
+          <div class="meme-shout">😠 你为啥直接 commit 到我的 master 分支啊！！！</div>
+          <div class="meme-reply">v1→main ← 直接commit / v2→feature / v3→main 😎 算了merge吧</div>
+        </div>
+      </div>
       <div class="visit-count">👁️ 已有 <span id="visitCount">--</span> 位大侠到此一游 &nbsp;·&nbsp; ⌨️ 按 <span style="border:1px solid var(--text-dim);padding:0 6px;border-radius:3px;font-size:0.7rem;cursor:pointer" onclick="toggleShortcuts()">?</span> 查看剑诀</div>
     </div>
   </footer>
@@ -2459,6 +2524,9 @@
       console.log('%c║  按 M 键 → 开启武林秘籍               ║', consoleGreen);
       console.log('%c║  页面双击 → 触发奇遇                  ║', consoleGreen);
       console.log('%c║  页脚印章悬停 → 神功自现              ║', consoleGreen);
+      console.log('%c║                                      ║', consoleSub);
+      console.log('%c║  😠 你为啥直接 commit 到我的 master    ║', consoleGreen);
+      console.log('%c║  分支啊！！！→ 页脚「版本谱」        ║', consoleGreen);
       console.log('%c║                                      ║', consoleSub);
       console.log('%c╚══════════════════════════════════════╝', consoleStyle);
 
