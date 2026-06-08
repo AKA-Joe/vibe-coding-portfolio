@@ -89,6 +89,7 @@ app.post('/api/tools/roundtable', async (req, res) => {
 
     if (!resp.ok) {
       const text = await resp.text();
+      console.error(`Dify roundtable error (${resp.status}):`, text);
       return res.status(502).json({ error: `Dify 请求失败 (${resp.status})`, detail: text });
     }
 
@@ -99,6 +100,7 @@ app.post('/api/tools/roundtable', async (req, res) => {
 
     res.json({ result: data.data.outputs });
   } catch (err) {
+    console.error('Roundtable error:', err);
     res.status(500).json({ error: '圆桌派调用失败', detail: err.message });
   }
 });
@@ -128,6 +130,7 @@ app.post('/api/tools/privacy', async (req, res) => {
 
     if (!resp.ok) {
       const text = await resp.text();
+      console.error(`Dify privacy error (${resp.status}):`, text);
       return res.status(502).json({ error: `Dify 请求失败 (${resp.status})`, detail: text });
     }
 

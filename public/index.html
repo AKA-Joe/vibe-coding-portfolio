@@ -2106,7 +2106,7 @@
           body: JSON.stringify({ question }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || '请求失败');
+        if (!res.ok) throw new Error(data.detail ? `${data.error} — ${data.detail}` : data.error);
         const result = data.result?.result || JSON.stringify(data.result);
         out.innerHTML = `<div style="white-space:pre-wrap;color:var(--text);font-family:var(--font-mono);font-size:0.9rem;">${escapeHtml(result)}</div>`;
         showToast('🎙️ 讨论结束，结果已出', 'success');
