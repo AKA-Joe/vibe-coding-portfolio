@@ -175,7 +175,7 @@ app.post('/api/tools/stability-test', async (req, res) => {
     const { url, key, models, requests = 10, concurrency = 3, timeout = 30 } = req.body;
     if (!url || !key || !models) return res.status(400).json({ error: 'API地址、Key和模型不能为空' });
 
-    const modelList = models.split(',').map(m => m.trim()).filter(Boolean);
+    const modelList = models.split(/[,，、]/).map(m => m.trim()).filter(Boolean);
     if (!modelList.length) return res.status(400).json({ error: '至少指定一个模型' });
 
     const maxR = Math.min(requests, 30);
