@@ -11,6 +11,8 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/logo.png">
   <link rel="apple-touch-icon" href="/logo.png">
+  <!-- 控制台彩蛋（F12即可见，零影响） -->
+  <script src="/console-egg.js" defer></script>
   <style>
     /* ============================================
        CSS 变量 — 深色主题（墨黑）
@@ -1321,6 +1323,54 @@
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ============================================
+       回到顶部按钮
+       ============================================ */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 50%;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 999;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-card);
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .back-to-top:hover {
+      color: var(--tg-blue);
+      border-color: var(--tg-blue);
+      box-shadow: var(--tg-blue-glow);
+      transform: translateY(-3px);
+    }
+
+    /* ============================================
+       访问计数器
+       ============================================ */
+    .visit-count {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+      text-align: center;
+      font-family: var(--font-mono);
+    }
   </style>
 </head>
 <body>
@@ -1567,8 +1617,12 @@
       <div class="footer-qoute">以键盘为剑 · 以代码为招</div>
       <div class="footer-seal"><span>码</span></div>
       <div class="footer-code"><span class="green">>_</span> Vibe Coding · <span id="footerYear">2025</span></div>
+      <div class="visit-count">👁️ 已有 <span id="visitCount">--</span> 位大侠到此一游</div>
     </div>
   </footer>
+
+  <!-- 回到顶部按钮 -->
+  <button class="back-to-top" id="backToTop" aria-label="回到顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
 
   <script>
     // =============================================
@@ -2332,6 +2386,18 @@
       loadNotes();
       // 页脚年份自动更新
       document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+      // ⬆️ 回到顶部按钮 — 滚动超过 300px 显示
+      const backBtn = document.getElementById('backToTop');
+      window.addEventListener('scroll', () => {
+        backBtn.classList.toggle('visible', window.scrollY > 300);
+      }, { passive: true });
+
+      // 👁️ 访问计数
+      fetch('/api/visits')
+        .then(r => r.json())
+        .then(d => { document.getElementById('visitCount').textContent = d.count; })
+        .catch(() => {});
 
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 

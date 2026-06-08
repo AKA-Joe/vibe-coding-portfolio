@@ -15,6 +15,27 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ============================================
+// 👁️ 访问计数器（持久化到 data/visits.json）
+// ============================================
+
+const VISITS_FILE = path.join(__dirname, 'data', 'visits.json');
+function readVisits() {
+  try {
+    return JSON.parse(require('fs').readFileSync(VISITS_FILE, 'utf-8'));
+  } catch { return { count: 0 }; }
+}
+function saveVisits(v) {
+  require('fs').writeFileSync(VISITS_FILE, JSON.stringify(v), 'utf-8');
+}
+
+app.get('/api/visits', (req, res) => {
+  const v = readVisits();
+  v.count += 1;
+  saveVisits(v);
+  res.json({ count: v.count });
+});
+
+// ============================================
 // API 路由
 // ============================================
 
