@@ -61,6 +61,88 @@ app.post('/api/tools/md-to-html', (req, res) => {
 });
 
 // ============================================
+// 🎙️ 工具：Dify — AI 圆桌派（投票决策）
+// ============================================
+
+const DIFY_API_KEY_RT = process.env.DIFY_API_KEY_RT || 'app-O3jXoRtyLqifSUu7IUTjIMlu';
+const DIFY_API_KEY_PRIV = process.env.DIFY_API_KEY_PRIV || 'app-WVsPMAh3DXTp1n4kmq4aClJp';
+const DIFY_BASE_URL = process.env.DIFY_BASE_URL || 'http://localhost';
+
+app.post('/api/tools/roundtable', async (req, res) => {
+  try {
+    const { question } = req.body;
+    if (!question) return res.status(400).json({ error: '问题不能为空' });
+
+    const resp = await fetch(`${DIFY_BASE_URL}/v1/workflows/run`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${DIFY_API_KEY_RT}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        inputs: { user_question: question },
+        response_mode: 'blocking',
+        user: 'roundtable-web',
+      }),
+      signal: AbortSignal.timeout(120000),
+    });
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      return res.status(502).json({ error: `Dify 请求失败 (${resp.status})`, detail: text });
+    }
+
+    const data = await resp.json();
+    if (data?.data?.status === 'failed') {
+      return res.status(502).json({ error: '工作流执行失败', detail: data.data.error });
+    }
+
+    res.json({ result: data.data.outputs });
+  } catch (err) {
+    res.status(500).json({ error: '圆桌派调用失败', detail: err.message });
+  }
+});
+
+// ============================================
+// 🔐 工具：Dify — 用户信息脱敏加密审查
+// ============================================
+
+app.post('/api/tools/privacy', async (req, res) => {
+  try {
+    const { name, phone, id_card, remark } = req.body;
+    if (!name || !phone) return res.status(400).json({ error: '姓名和手机号不能为空' });
+
+    const resp = await fetch(`${DIFY_BASE_URL}/v1/workflows/run`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${DIFY_API_KEY_PRIV}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        inputs: { name, phone, id_card: id_card || '', remark: remark || '' },
+        response_mode: 'blocking',
+        user: 'privacy-web',
+      }),
+      signal: AbortSignal.timeout(120000),
+    });
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      return res.status(502).json({ error: `Dify 请求失败 (${resp.status})`, detail: text });
+    }
+
+    const data = await resp.json();
+    if (data?.data?.status === 'failed') {
+      return res.status(502).json({ error: '工作流执行失败', detail: data.data.error });
+    }
+
+    res.json({ result: data.data.outputs?.output || JSON.stringify(data.data.outputs) });
+  } catch (err) {
+    res.status(500).json({ error: '脱敏审查调用失败', detail: err.message });
+  }
+});
+
+// ============================================
 // 工具：学习时间线生成
 // ============================================
 

@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="apple-touch-icon" href="/logo.png">
   <style>
     /* ============================================
        CSS 变量 — 深色主题（墨黑）
@@ -1390,6 +1393,55 @@
           </div>
         </div>
       </div>
+
+      <!-- 🎙️ Dify — AI 圆桌派 -->
+      <div class="terminal-box reveal" style="margin-top:24px;">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+          </div>
+          <span class="terminal-title">🎙️ ai-roundtable.sh — 圆桌派</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-prompt">$ 三位嘉宾已就位，请提问：</div>
+          <textarea id="rtInput" placeholder="例：2026年最值得学的编程语言是什么？&#10;例：如何避免写出屎山代码？" style="min-height:80px;"></textarea>
+          <div class="terminal-btns">
+            <button class="term-btn term-btn-blue" onclick="runRoundtable()">🎤 发起讨论</button>
+          </div>
+          <div class="terminal-prompt">$ 嘉宾讨论结果：</div>
+          <div class="term-output" id="rtOutput">
+            <span style="color:var(--text-dim)">_ 等待提问 ...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔐 Dify — 脱敏加密审查 -->
+      <div class="terminal-box reveal" style="margin-top:24px;">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+          </div>
+          <span class="terminal-title">🔐 privacy-mask.sh — 脱敏加密</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-prompt">$ 输入敏感信息：</div>
+          <input id="privName" placeholder="姓名" />
+          <input id="privPhone" placeholder="手机号" />
+          <input id="privIdcard" placeholder="身份证号（可选）" />
+          <input id="privRemark" placeholder="备注（可选）" />
+          <div class="terminal-btns">
+            <button class="term-btn term-btn-blue" onclick="runPrivacy()">🔐 脱敏加密</button>
+          </div>
+          <div class="terminal-prompt">$ 处理结果：</div>
+          <div class="term-output" id="privOutput">
+            <span style="color:var(--text-dim)">_ 等待输入 ...</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1889,6 +1941,67 @@
       document.getElementById('mdInput').value = '';
       document.getElementById('mdOutput').innerHTML = '<span style="color:var(--text-dim)">_ 等待输入 ...</span>';
       showToast('清屏完成', 'info');
+    }
+
+    // =============================================
+    // 🎙️ AI 圆桌派 — 调用 Dify 工作流
+    // =============================================
+    async function runRoundtable() {
+      const input = document.getElementById('rtInput');
+      const out = document.getElementById('rtOutput');
+      const question = input.value.trim();
+      if (!question) {
+        out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 请先输入问题</span>';
+        return;
+      }
+      out.innerHTML = '<span style="color:var(--gold)">⏳ 正在召集三位嘉宾讨论中 ...</span>';
+      try {
+        const res = await fetch('/api/tools/roundtable', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '请求失败');
+        const result = data.result?.result || JSON.stringify(data.result);
+        out.innerHTML = `<div style="white-space:pre-wrap;color:var(--text);font-family:var(--font-mono);font-size:0.9rem;">${escapeHtml(result)}</div>`;
+        showToast('🎙️ 讨论结束，结果已出', 'success');
+      } catch (e) {
+        out.innerHTML = `<span style="color:var(--vermillion)">⚠️ ${escapeHtml(e.message)}</span>`;
+        showToast('讨论失败: ' + e.message, 'error');
+      }
+    }
+
+    // =============================================
+    // 🔐 脱敏加密审查 — 调用 Dify 工作流
+    // =============================================
+    async function runPrivacy() {
+      const name = document.getElementById('privName').value.trim();
+      const phone = document.getElementById('privPhone').value.trim();
+      const id_card = document.getElementById('privIdcard').value.trim();
+      const remark = document.getElementById('privRemark').value.trim();
+      const out = document.getElementById('privOutput');
+
+      if (!name || !phone) {
+        out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 姓名和手机号不能为空</span>';
+        return;
+      }
+      out.innerHTML = '<span style="color:var(--gold)">⏳ 正在脱敏加密审查 ...</span>';
+      try {
+        const res = await fetch('/api/tools/privacy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, id_card, remark }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '请求失败');
+        const result = data.result || JSON.stringify(data);
+        out.innerHTML = `<div style="white-space:pre-wrap;color:var(--text);font-family:var(--font-mono);font-size:0.9rem;">${escapeHtml(result)}</div>`;
+        showToast('🔐 脱敏加密完成', 'success');
+      } catch (e) {
+        out.innerHTML = `<span style="color:var(--vermillion)">⚠️ ${escapeHtml(e.message)}</span>`;
+        showToast('处理失败: ' + e.message, 'error');
+      }
     }
 
     // =============================================
