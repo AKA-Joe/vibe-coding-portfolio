@@ -21,10 +21,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 获取个人资料信息（模拟数据，后续可连接数据库）
 app.get('/api/profile', (req, res) => {
   res.json({
-    name: '你的名字',
-    title: '全栈开发者 / AI 爱好者',
-    bio: '热爱用代码创造价值，正在探索 Vibe Coding 的全新开发范式。',
-    skills: ['Node.js', 'React', 'Python', 'Docker', 'AI/LLM', 'TypeScript'],
+    name: '空栈工程师',
+    title: '造轮子专业户 / Stack Overflow 高级检索师',
+    bio: '一只喜欢造轮子的🐒，江湖人称「空栈工程师」。信奉「能跑就别动」，口头禅包括「在我电脑上明明是好的」「重启试试」。曾获「年度最多 bug 产出奖」。',
+    skills: ['复制粘贴（带微调）', 'Stack Overflow 检索', '重启大法', 'Ctrl+Z', 'console.log 调试', '造轮子'],
     social: {
       github: 'https://github.com/yourname',
       email: 'yourname@example.com'

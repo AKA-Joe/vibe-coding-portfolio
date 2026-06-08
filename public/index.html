@@ -122,7 +122,7 @@
     }
 
     [data-theme="light"] #codeRainCanvas {
-      opacity: 0.25;
+      opacity: 0.5;
     }
 
     /* ============================================
@@ -133,6 +133,17 @@
       position: relative;
       z-index: 1;
     }
+    .section::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      max-width: 300px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+    }
+    .section:last-of-type::after { display: none; }
 
     .section-title {
       font-family: var(--font-calligraphy);
@@ -281,7 +292,8 @@
         font-size: 1.2rem;
       }
       .tg-theme-btn { display: none; }
-      .section { padding: 60px 0; }
+      .section { padding: 60px 0 100px; }
+      body { padding-bottom: 60px; }
     }
 
     /* ============================================
@@ -366,6 +378,41 @@
       color: var(--tg-blue);
     }
 
+    /* 飞剑光标 — 御剑飞行 */
+    .hero-typewriter-area .sword-cursor {
+      display: inline-block;
+      font-size: 1.05rem;
+      line-height: 1;
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: sword-fly 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 6px rgba(0,255,65,0.5)) drop-shadow(0 0 18px rgba(0,255,65,0.15));
+      transform-origin: center bottom;
+      pointer-events: none;
+      user-select: none;
+      will-change: transform, opacity;
+    }
+    @keyframes sword-fly {
+      0%, 100% { opacity: 1; transform: translateY(0) rotate(-15deg); }
+      35% { transform: translateY(-3px) rotate(-8deg); }
+      50% { opacity: 0.35; transform: translateY(1px) rotate(-22deg); }
+      70% { transform: translateY(-1px) rotate(-10deg); }
+    }
+
+    /* ============================================
+       斜飞剑鼠标指针 — 匹配打字机风格
+       ============================================ */
+    html {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg transform='rotate(40, 16, 20)'%3E%3Cpolygon points='16,2 19,16 16,14 13,16' fill='%23CBD5E1'/%3E%3Cpolygon points='16,2 18,16 16,14' fill='%23F8FAFC'/%3E%3Crect x='7' y='16' width='18' height='3' rx='0.5' fill='%23F59E0B'/%3E%3Crect x='7' y='16' width='18' height='1' fill='%23FBBF24'/%3E%3Crect x='7' y='16' width='3' height='3' fill='%23D97706'/%3E%3Crect x='22' y='16' width='3' height='3' fill='%23D97706'/%3E%3Crect x='12' y='19' width='8' height='8' fill='%23451A03'/%3E%3Crect x='13' y='19' width='2' height='8' fill='%2378350F'/%3E%3Crect x='12' y='21' width='8' height='1' fill='%2378350F'/%3E%3Crect x='12' y='23' width='8' height='1' fill='%2378350F'/%3E%3Crect x='12' y='25' width='8' height='1' fill='%2378350F'/%3E%3Ccircle cx='16' cy='28' r='2.5' fill='%23F59E0B'/%3E%3Ccircle cx='16' cy='28' r='1.5' fill='%23FBBF24'/%3E%3C/g%3E%3C/svg%3E") 28 6, auto;
+    }
+    /* 全局继承飞剑指针 */
+    html body * {
+      cursor: inherit;
+    }
+    /* 输入框保留文本指针，按钮/链接保留手型交互语义 */
+    input, textarea, [contenteditable] { cursor: text; }
+    a, button, [role="button"], label[for] { cursor: pointer; }
+
     /* 打字机区域 */
     .hero-typewriter-area {
       margin-bottom: 20px;
@@ -378,19 +425,6 @@
     }
     .hero-typewriter-text {
       color: var(--text-secondary);
-    }
-    .hero-typewriter-area .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: var(--tg-green);
-      margin-left: 2px;
-      animation: blink 0.7s step-end infinite;
-      vertical-align: text-bottom;
-    }
-    @keyframes blink {
-      0%,100% { opacity: 1; }
-      50% { opacity: 0; }
     }
 
     .hero-bio {
@@ -445,7 +479,7 @@
     /* 滚动指示器 — Telegram 风格 */
     .scroll-indicator {
       position: absolute;
-      bottom: 80px;
+      bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -1005,8 +1039,8 @@
        ============================================ */
     .easter-egg-quote {
       position: fixed;
-      bottom: 100px;
-      right: 30px;
+      bottom: 90px;
+      right: 20px;
       max-width: 340px;
       background: var(--bg-card);
       border: 1px solid var(--gold);
@@ -1155,6 +1189,56 @@
     }
 
     /* ============================================
+       Toast 通知 — Telegram 顶部横幅风格
+       ============================================ */
+    .toast-container {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 20px 0;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--tg-blue);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+      transform: translateY(-120%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      line-height: 1.4;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .toast.error {
+      background: var(--vermillion);
+    }
+    .toast.success {
+      background: #2b8a3e;
+    }
+    .toast .toast-icon {
+      flex-shrink: 0;
+      font-size: 1.05rem;
+    }
+
+    /* ============================================
        滚动入场动画
        ============================================ */
     .reveal {
@@ -1176,6 +1260,9 @@
 
   <!-- 滚动进度条 -->
   <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Toast 通知容器 — Telegram 风格 -->
+  <div class="toast-container" id="toastContainer"></div>
 
   <!-- 代码雨 Canvas -->
   <canvas id="codeRainCanvas"></canvas>
@@ -1224,12 +1311,11 @@
       <div class="hero-typewriter-area">
         <span class="prefix">$> </span>
         <span class="hero-typewriter-text" id="heroTyper"></span>
-        <span class="cursor"></span>
+        <span class="sword-cursor">🗡️</span>
       </div>
 
       <p class="hero-bio">
-        以键盘为剑，以代码为招。<br>
-        行走在数字江湖的独行侠客。
+        一只喜欢造轮子的🐒，江湖人称「空栈工程师」。日常沉迷于把简单问题复杂化，享受提交前自信满满、上线后光速回滚的过山车体验。
       </p>
 
       <div class="hero-actions">
@@ -1358,42 +1444,56 @@
     <div class="container">
       <div class="footer-qoute">以键盘为剑 · 以代码为招</div>
       <div class="footer-seal"><span>码</span></div>
-      <div class="footer-code"><span class="green">>_</span> Vibe Coding · 2025</div>
+      <div class="footer-code"><span class="green">>_</span> Vibe Coding · <span id="footerYear">2025</span></div>
     </div>
   </footer>
 
   <script>
     // =============================================
-    // 配置数据
+    // 配置数据 ← 在这里修改你的个人信息
     // =============================================
     const SKILLS = [
-      { name: 'Node.js', level: 85 },
-      { name: 'React', level: 80 },
-      { name: 'Python', level: 75 },
-      { name: 'Docker', level: 70 },
-      { name: 'AI / LLM', level: 78 },
-      { name: 'TypeScript', level: 82 },
-      { name: 'Express', level: 88 },
-      { name: 'Git', level: 85 },
+      { name: '复制粘贴（带微调）', level: 95 },
+      { name: 'Stack Overflow 高级检索师', level: 92 },
+      { name: '重启大法（物理+魔法）', level: 90 },
+      { name: 'Ctrl+Z 救世主', level: 88 },
+      { name: '造轮子（多边形、椭圆形、不规则形）', level: 85 },
+      { name: '甩锅给需求 / PM / 测试 / 网络波动', level: 82 },
+      { name: 'Git --force 专业户', level: 80 },
+      { name: 'console.log 驱动的调试艺术', level: 78 },
+      { name: '代码屎山建筑师（国家一级）', level: 75 },
+      { name: 'README.md 诗人', level: 72 },
+      { name: '生产环境预言家（反向）', level: 70 },
+      { name: '24小时待机删库跑路（未遂）', level: 65 },
     ];
 
     const PROJECTS = [
-      { emoji: '🌐', title: '个人官网', desc: '三界融合风格个人官网，融合古风侠客、Coding 与 Telegram 设计语言', tags: ['Node.js', 'CSS 艺术', '三界融合'] },
-      { emoji: '🤖', title: 'AI 聊天助手', desc: '基于 LLM API 的智能对话机器人，支持上下文记忆与流式输出', tags: ['AI', 'API', 'JavaScript'] },
-      { emoji: '📝', title: 'Markdown 工具集', desc: '所见即所得的 Markdown 编辑器，终端风格交互，支持实时预览', tags: ['工具', 'Node.js', 'Terminal UI'] },
+      { emoji: '🏗️', title: '公司内部脚手架系统', desc: '又造了一个轮子，这次是三角形的，没人能用但自己很嗨', tags: ['造轮子', '自嗨', '三角形'] },
+      { emoji: '🪹', title: '空栈优化计划', desc: '写了个脚本递归调用自己，成功把服务器栈撑爆，然后从递归里爬出来', tags: ['递归', '栈溢出', '炼蛊'] },
+      { emoji: '🥚', title: 'Bug 孵化器', desc: '每次提交都能稳定触发同事的 CodeReview 表情包（已集齐 99 张）', tags: ['bug', '表情包', '成就'] },
+      { emoji: '🎯', title: '自动化甩锅系统', desc: '用 if-else 自动判断故障责任方，准确率 0%', tags: ['甩锅', 'AI', '准确率感人'] },
+      { emoji: '🎭', title: '生产环境降级演练', desc: '每周五下午准时表演：自信上线 → 光速回滚 → 假装无事发生', tags: ['回滚', '周五', '影帝'] },
+      { emoji: '📖', title: 'README 驱动开发', desc: '文档写得比代码还漂亮，运行一下全是 TODO', tags: ['README', '画饼', 'TODO'] },
     ];
 
     const TIMELINE = [
-      { year: '2025', event: '拜入 AI 青年特训营', desc: '系统修炼 Vibe Coding 心法，习得 AI 辅助开发之法' },
-      { year: '2025', event: '铸成首柄法器', desc: '以 AI 为炉火，从零锻造个人官网与实用工具' },
-      { year: '2026', event: '踏入化神之境', desc: '持续精进，探索 AI 辅助开发的更高境界' },
+      { year: '2019-2020', event: '实习生', desc: '把公司的测试环境搞炸 7 次，学会了 alias cd="cd && clear"' },
+      { year: '2020-2021', event: '初级开发', desc: '写出的空指针异常比 Java 官方示例还全，被尊称「空栈居士」' },
+      { year: '2021-2022', event: '中级开发', desc: '开始享受 debug 到凌晨 3 点，第二天汇报「已定位问题，正在修复」（其实还没动）' },
+      { year: '2022-2023', event: '高级划水工程师', desc: '掌握了「代码写得越烂，review 越久，摸鱼越久」的核心理论' },
+      { year: '2023-至今', event: '空栈工程师（自封）', desc: '日常在 console.log、git push --force 与人生意义之间反复横跳，偶尔产出可运行的 bug' },
     ];
 
     const TYPING_LINES = [
-      '以键盘为剑 / 以代码为招',
-      '独行数字江湖',
-      '>_ system.online()',
-      '剑气已凝聚 · 时刻待命',
+      '这需求做不了... 除非加钱',
+      '等等我 git push --force 一下',
+      '在我电脑上是好的，要不你来我家看？',
+      '又是面向 Stack Overflow 编程的一天',
+      '能跑就别动，动了就别提 MR',
+      '我不是在写 bug，我是在创造就业机会',
+      '删库跑路？不，我选择删 node_modules',
+      '这个问题很奇怪，我 restart 一下就好了',
+      '这个 feature 不是 bug，是意外惊喜',
     ];
 
     // =============================================
@@ -1422,13 +1522,16 @@
       function createDrops(count) {
         drops = [];
         const cols = Math.floor(canvas.width / 24);
+        const theme = document.documentElement.getAttribute('data-theme');
         for (let i = 0; i < cols && i < count; i++) {
           drops.push({
             x: i * 24 + Math.random() * 20,
             y: Math.random() * canvas.height,
             speed: 0.3 + Math.random() * 0.7,
             size: 12 + Math.random() * 8,
-            opacity: 0.1 + Math.random() * 0.3,
+            opacity: theme === 'light'
+              ? 0.2 + Math.random() * 0.35
+              : 0.1 + Math.random() * 0.3,
             char: CHARS[Math.floor(Math.random() * CHARS.length)],
             flicker: Math.random() * 100,
           });
@@ -1459,15 +1562,19 @@
 
           let color;
           if (isCoding) {
-            color = `rgba(0, 255, 65, ${alpha})`;
+            color = theme === 'light'
+              ? `rgba(0, 130, 60, ${alpha * 1.3})`
+              : `rgba(0, 255, 65, ${alpha})`;
           } else if (isChinese) {
             if (theme === 'light') {
-              color = `rgba(180, 140, 80, ${alpha})`;
+              color = `rgba(100, 70, 35, ${Math.min(alpha * 1.6, 0.8)})`;
             } else {
-              color = `rgba(212, 165, 71, ${alpha * 0.8})`;
+              color = `rgba(212, 165, 71, ${Math.min(alpha * 1.5, 1)})`;
             }
           } else {
-            color = `rgba(0, 136, 204, ${alpha})`;
+            color = theme === 'light'
+              ? `rgba(0, 100, 180, ${alpha * 1.3})`
+              : `rgba(0, 136, 204, ${alpha})`;
           }
 
           ctx.font = `${d.size}px "JetBrains Mono", "Ma Shan Zheng", monospace`;
@@ -1667,13 +1774,37 @@
     }
 
     // =============================================
+    // Telegram 风格 Toast 通知
+    // =============================================
+    let toastTimer = null;
+
+    function showToast(message, type = 'info', duration = 2600) {
+      const container = document.getElementById('toastContainer');
+      const icons = { info: '📢', success: '✅', error: '⚠️' };
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span class="toast-icon">${icons[type] || '📢'}</span>${message}`;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => { toast.classList.add('show'); });
+
+      clearTimeout(toastTimer);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        toast.addEventListener('transitionend', () => { if (toast.parentNode) toast.remove(); }, { once: true });
+        setTimeout(() => { if (toast.parentNode) toast.remove(); }, 500);
+      }, duration);
+    }
+
+    // =============================================
     // 笔记 CRUD
     // =============================================
     async function loadNotes() {
+      const list = document.getElementById('notesList');
+      list.innerHTML = '<div class="empty-notes" style="opacity:0.6">⌛ 加载心得中 ...</div>';
       try {
         const res = await fetch('/api/notes');
         const notes = await res.json();
-        const list = document.getElementById('notesList');
         if (notes.length === 0) {
           list.innerHTML = '<div class="empty-notes">暂无心得 · 开始修炼吧</div>';
           return;
@@ -1697,7 +1828,7 @@
     async function createNote() {
       const title = document.getElementById('noteTitle').value.trim();
       const content = document.getElementById('noteContent').value.trim();
-      if (!title || !content) { alert('请填写标题与内容！'); return; }
+      if (!title || !content) { showToast('请填写标题与内容！', 'error'); return; }
       try {
         const res = await fetch('/api/notes', {
           method: 'POST',
@@ -1708,16 +1839,19 @@
           document.getElementById('noteTitle').value = '';
           document.getElementById('noteContent').value = '';
           loadNotes();
+          showToast('心得已保存 ✨', 'success');
+        } else {
+          showToast('保存失败 · 请重试', 'error');
         }
-      } catch (e) { console.error(e); }
+      } catch (e) { showToast('保存失败 · 网络异常', 'error'); console.error(e); }
     }
 
     async function deleteNote(id) {
-      if (!confirm('确定删除这条心得？')) return;
       try {
         const res = await fetch(`/api/notes/${id}`, { method: 'DELETE' });
-        if (res.ok) loadNotes();
-      } catch (e) { console.error(e); }
+        if (res.ok) { loadNotes(); showToast('心得已删除', 'info'); }
+        else { showToast('删除失败 · 请重试', 'error'); }
+      } catch (e) { showToast('删除失败 · 网络异常', 'error'); console.error(e); }
     }
 
     function escapeHtml(text) {
@@ -1748,11 +1882,13 @@
         .replace(/\n\n/g, '</p><p>')
         .replace(/^(.+)$/gm, m => m.startsWith('<') ? m : `<p>${m}</p>`);
       out.innerHTML = html;
+      showToast('🗡️ 剑气化形 · 转换成功', 'success');
     }
 
     function clearMarkdown() {
       document.getElementById('mdInput').value = '';
       document.getElementById('mdOutput').innerHTML = '<span style="color:var(--text-dim)">_ 等待输入 ...</span>';
+      showToast('清屏完成', 'info');
     }
 
     // =============================================
@@ -1770,6 +1906,7 @@
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+      showToast(next === 'dark' ? '🌙 已切换至暗夜模式' : '☀️ 已切换至宣纸模式', 'info');
     }
 
     // =============================================
@@ -1915,6 +2052,8 @@
       initMobileMenu();
       initEasterEggs();
       loadNotes();
+      // 页脚年份自动更新
+      document.getElementById('footerYear').textContent = new Date().getFullYear();
 
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
