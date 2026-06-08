@@ -1356,8 +1356,8 @@
         <li><a href="#skills" data-icon="⚡">技能</a></li>
         <li><a href="#projects" data-icon="📦">项目</a></li>
         <li><a href="#timeline" data-icon="📅">历程</a></li>
-        <li><a href="#tools" data-icon="🛠">工具</a></li>
-        <li><a href="#notes" data-icon="📒">笔记</a></li>
+        
+        
         <li>
           <button class="tg-theme-btn" id="themeToggle" aria-label="切换主题">🌙</button>
         </li>
@@ -1403,9 +1403,6 @@
         <a href="#projects" class="tg-btn tg-btn-primary">
           查看项目 →
         </a>
-        <a href="#tools" class="tg-btn tg-btn-outline">
-          体验工具
-        </a>
       </div>
     </div>
 
@@ -1441,52 +1438,6 @@
       <h2 class="section-title reveal">· 修炼纪年 ·</h2>
       <div class="timeline-chat" id="timelineChat">
         <!-- JS 动态渲染 -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== 工具 ========== -->
-  <section class="section" id="tools">
-    <div class="container">
-      <h2 class="section-title reveal">· 法器炼丹 ·</h2>
-      <div class="terminal-box reveal">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="terminal-dot red"></span>
-            <span class="terminal-dot yellow"></span>
-            <span class="terminal-dot green"></span>
-          </div>
-          <span class="terminal-title">📄 md-to-html.sh — 80×24</span>
-        </div>
-        <div class="terminal-body">
-          <div class="terminal-prompt">$ cat > input.md &lt;&lt; EOF</div>
-          <textarea id="mdInput" placeholder="# 在此输入 Markdown&#10;&#10;**加粗文字**&#10;- 列表项"></textarea>
-          <div class="terminal-btns">
-            <button class="term-btn term-btn-blue" onclick="convertMarkdown()">▶ 转换</button>
-            <button class="term-btn" onclick="clearMarkdown()">✕ 清屏</button>
-          </div>
-          <div class="terminal-prompt">$ node render.js — 输出:</div>
-          <div class="term-output" id="mdOutput">
-            <span style="color:var(--text-dim)">_ 等待输入 ...</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============================================================
-            🎙️ AI 圆桌派 — 【离线版已移除】
-            需要启动服务端才能使用，详见项目 README。
-            ============================================================ -->
-      <!-- ============================================================
-            🔐 脱敏加密审查 — 【离线版已移除】
-            需要启动服务端才能使用，详见项目 README。
-            ============================================================ -->
-    </div>
-  </section>
-
-  <!-- ========== 笔记 — 【离线版已移除】需要启动服务端 ========== -->
-            <div class="empty-notes">暂无心得 · 开始修炼吧</div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -1943,61 +1894,19 @@
     // 笔记 CRUD — 【离线版】：仅显示提示
     // =============================================
     /* OFFLINE: 笔记功能需要服务端，以下为占位函数 */
-    function loadNotes() {
-      const list = document.getElementById('notesList');
-      if (list) list.innerHTML = '<div class="empty-notes">📦 离线版本 · 笔记功能需启动服务端</div>';
-    }
-    function createNote() { showToast('📦 离线版本 · 笔记功能需启动服务端才能使用', 'error'); }
-    function deleteNote(id) { showToast('📦 离线版本 · 笔记功能需启动服务端才能使用', 'error'); }
-
-    function escapeHtml(text) {
-      const d = document.createElement('div');
-      d.textContent = text;
-      return d.innerHTML;
-    }
+    function loadNotes() {}
+    function createNote() {}
 
     // =============================================
     // Markdown 转换
     // =============================================
-    function convertMarkdown() {
-      const input = document.getElementById('mdInput').value;
-      const out = document.getElementById('mdOutput');
-      if (!input.trim()) {
-        out.innerHTML = '<span style="color:var(--text-dim)">_ 请先输入 Markdown 内容</span>';
-        return;
-      }
-      let html = input
-        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/`(.+?)`/g, '<code>$1</code>')
-        .replace(/^- (.+)$/gm, '<li>$1</li>')
-        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/^(.+)$/gm, m => m.startsWith('<') ? m : `<p>${m}</p>`);
-      out.innerHTML = html;
-      showToast('🗡️ 剑气化形 · 转换成功', 'success');
-    }
+    function convertMarkdown() { showToast("📦 离线版本"); }
 
-    function clearMarkdown() {
-      document.getElementById('mdInput').value = '';
-      document.getElementById('mdOutput').innerHTML = '<span style="color:var(--text-dim)">_ 等待输入 ...</span>';
-      showToast('清屏完成', 'info');
-    }
+    function clearMarkdown() {}
 
     /* OFFLINE: 以下函数在离线版中仅显示提示，需启动服务端 */
-    function runRoundtable() {
-      showToast('📦 离线版本 · AI 圆桌派需启动服务端才能使用', 'error');
-      const out = document.getElementById('rtOutput');
-      if (out) out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 离线版本 · 此功能需要启动服务端</span>';
-    }
-    function runPrivacy() {
-      showToast('📦 离线版本 · 脱敏加密需启动服务端才能使用', 'error');
-      const out = document.getElementById('privOutput');
-      if (out) out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 离线版本 · 此功能需要启动服务端</span>';
-    }
+    function runRoundtable() {}
+    function runPrivacy() {}
 
     // =============================================
     // 主题切换
@@ -2083,7 +1992,15 @@
 
     // 初始化彩蛋
     function initEasterEggs() {
-      // 🥷 Console 彩蛋 — 隐藏秘籍
+      
+  console.log('%c╔══════════════════════════════════════════════╗', 'color: #d4a547');
+  console.log('%c║  你为什么直接 commit 到我的 master 分支！！！║', 'color: #ff5f57; font-weight: bold');
+  console.log('%c╠══════════════════════════════════════════════╣', 'color: #d4a547');
+  console.log('%c║  开个玩笑，这只是个离线预览版                ║', 'color: #8a8a8a');
+  console.log('%c║  来都来了，按 Q 键领一句江湖名言再走吧        ║', 'color: #8a8a8a');
+  console.log('%c╚══════════════════════════════════════════════╝', 'color: #d4a547');
+
+    // 🥷 Console 彩蛋 — 隐藏秘籍
       const consoleStyle = 'color: #d4a547; font-size: 14px; font-weight: bold;';
       const consoleSub = 'color: #8a8a8a; font-size: 11px;';
       const consoleGreen = 'color: #00ff41; font-size: 11px;';
@@ -2183,8 +2100,7 @@
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
       document.getElementById('mdInput').addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') convertMarkdown();
-      });
+        });
     });
   </script>
 </body>
