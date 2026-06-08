@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="dark">
+<!-- ============================================================
+  【离线版本】剑客·码者 个人官网
+  ============================================================
+  说明：本版本为纯前端离线包，双击 index.html 即可浏览。
+  如需完整功能（笔记、Dify 工具等），请启动服务端：
+    npm install && npm start
+  或访问线上版：https://vibe-coding-portfolio-production-fc72.up.railway.app
+  ============================================================ -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1361,7 +1369,7 @@
   <section class="hero" id="about">
     <!-- Hero 背景画像 -->
     <div class="hero-bg" id="heroBg">
-      <img src="/神女惊世.png" alt="神女惊世" loading="eager">
+      <img src="/hero-bg.jpg" alt="神女惊世" loading="eager">
     </div>
     <div class="container hero-content">
       <!-- 印章 -->
@@ -1464,79 +1472,18 @@
         </div>
       </div>
 
-      <!-- 🎙️ Dify — AI 圆桌派 -->
-      <div class="terminal-box reveal" style="margin-top:24px;">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="terminal-dot red"></span>
-            <span class="terminal-dot yellow"></span>
-            <span class="terminal-dot green"></span>
-          </div>
-          <span class="terminal-title">🎙️ ai-roundtable.sh — 圆桌派</span>
-        </div>
-        <div class="terminal-body">
-          <div class="terminal-prompt">$ 三位嘉宾已就位，请提问：</div>
-          <textarea id="rtInput" placeholder="例：2026年最值得学的编程语言是什么？&#10;例：如何避免写出屎山代码？" style="min-height:80px;"></textarea>
-          <div class="terminal-btns">
-            <button class="term-btn term-btn-blue" onclick="runRoundtable()">🎤 发起讨论</button>
-          </div>
-          <div class="terminal-prompt">$ 嘉宾讨论结果：</div>
-          <div class="term-output" id="rtOutput">
-            <span style="color:var(--text-dim)">_ 等待提问 ...</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 🔐 Dify — 脱敏加密审查 -->
-      <div class="terminal-box reveal" style="margin-top:24px;">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="terminal-dot red"></span>
-            <span class="terminal-dot yellow"></span>
-            <span class="terminal-dot green"></span>
-          </div>
-          <span class="terminal-title">🔐 privacy-mask.sh — 脱敏加密</span>
-        </div>
-        <div class="terminal-body">
-          <div class="terminal-prompt">$ 输入敏感信息：</div>
-          <input id="privName" placeholder="姓名" />
-          <input id="privPhone" placeholder="手机号" />
-          <input id="privIdcard" placeholder="身份证号（可选）" />
-          <input id="privRemark" placeholder="备注（可选）" />
-          <div class="terminal-btns">
-            <button class="term-btn term-btn-blue" onclick="runPrivacy()">🔐 脱敏加密</button>
-          </div>
-          <div class="terminal-prompt">$ 处理结果：</div>
-          <div class="term-output" id="privOutput">
-            <span style="color:var(--text-dim)">_ 等待输入 ...</span>
-          </div>
-        </div>
-      </div>
+      <!-- ============================================================
+            🎙️ AI 圆桌派 — 【离线版已移除】
+            需要启动服务端才能使用，详见项目 README。
+            ============================================================ -->
+      <!-- ============================================================
+            🔐 脱敏加密审查 — 【离线版已移除】
+            需要启动服务端才能使用，详见项目 README。
+            ============================================================ -->
     </div>
   </section>
 
-  <!-- ========== 笔记 ========== -->
-  <section class="section" id="notes">
-    <div class="container">
-      <h2 class="section-title reveal">· 修炼心得 ·</h2>
-      <div class="terminal-box reveal">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="terminal-dot red"></span>
-            <span class="terminal-dot yellow"></span>
-            <span class="terminal-dot green"></span>
-          </div>
-          <span class="terminal-title">📒 saved-messages — 已保存</span>
-        </div>
-        <div class="terminal-body">
-          <div class="terminal-prompt">$ vim note.md</div>
-          <input id="noteTitle" placeholder="标题 / 招数名" />
-          <textarea id="noteContent" placeholder="写下你的修炼心得 ..." style="min-height:80px;"></textarea>
-          <div class="terminal-btns">
-            <button class="term-btn term-btn-blue" onclick="createNote()">💾 保存心得</button>
-          </div>
-          <div class="terminal-prompt" style="margin-top:16px;">$ ls -la notes/</div>
-          <div id="notesList">
+  <!-- ========== 笔记 — 【离线版已移除】需要启动服务端 ========== -->
             <div class="empty-notes">暂无心得 · 开始修炼吧</div>
           </div>
         </div>
@@ -1993,62 +1940,15 @@
     }
 
     // =============================================
-    // 笔记 CRUD
+    // 笔记 CRUD — 【离线版】：仅显示提示
     // =============================================
-    async function loadNotes() {
+    /* OFFLINE: 笔记功能需要服务端，以下为占位函数 */
+    function loadNotes() {
       const list = document.getElementById('notesList');
-      list.innerHTML = '<div class="empty-notes" style="opacity:0.6">⌛ 加载心得中 ...</div>';
-      try {
-        const res = await fetch('/api/notes');
-        const notes = await res.json();
-        if (notes.length === 0) {
-          list.innerHTML = '<div class="empty-notes">暂无心得 · 开始修炼吧</div>';
-          return;
-        }
-        list.innerHTML = notes.map(n => `
-          <div class="saved-msg-item">
-            <div class="saved-msg-avatar">📄</div>
-            <div class="saved-msg-body">
-              <div class="msg-title">${escapeHtml(n.title)}</div>
-              <div class="msg-text">${escapeHtml(n.content)}</div>
-              <div class="msg-footer">
-                <span class="msg-date">🕐 ${new Date(n.createdAt).toLocaleString('zh-CN')}</span>
-                <button class="saved-msg-del" onclick="deleteNote('${n.id}')">✕</button>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      } catch (e) { console.error(e); }
+      if (list) list.innerHTML = '<div class="empty-notes">📦 离线版本 · 笔记功能需启动服务端</div>';
     }
-
-    async function createNote() {
-      const title = document.getElementById('noteTitle').value.trim();
-      const content = document.getElementById('noteContent').value.trim();
-      if (!title || !content) { showToast('请填写标题与内容！', 'error'); return; }
-      try {
-        const res = await fetch('/api/notes', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content })
-        });
-        if (res.ok) {
-          document.getElementById('noteTitle').value = '';
-          document.getElementById('noteContent').value = '';
-          loadNotes();
-          showToast('心得已保存 ✨', 'success');
-        } else {
-          showToast('保存失败 · 请重试', 'error');
-        }
-      } catch (e) { showToast('保存失败 · 网络异常', 'error'); console.error(e); }
-    }
-
-    async function deleteNote(id) {
-      try {
-        const res = await fetch(`/api/notes/${id}`, { method: 'DELETE' });
-        if (res.ok) { loadNotes(); showToast('心得已删除', 'info'); }
-        else { showToast('删除失败 · 请重试', 'error'); }
-      } catch (e) { showToast('删除失败 · 网络异常', 'error'); console.error(e); }
-    }
+    function createNote() { showToast('📦 离线版本 · 笔记功能需启动服务端才能使用', 'error'); }
+    function deleteNote(id) { showToast('📦 离线版本 · 笔记功能需启动服务端才能使用', 'error'); }
 
     function escapeHtml(text) {
       const d = document.createElement('div');
@@ -2087,65 +1987,16 @@
       showToast('清屏完成', 'info');
     }
 
-    // =============================================
-    // 🎙️ AI 圆桌派 — 调用 Dify 工作流
-    // =============================================
-    async function runRoundtable() {
-      const input = document.getElementById('rtInput');
+    /* OFFLINE: 以下函数在离线版中仅显示提示，需启动服务端 */
+    function runRoundtable() {
+      showToast('📦 离线版本 · AI 圆桌派需启动服务端才能使用', 'error');
       const out = document.getElementById('rtOutput');
-      const question = input.value.trim();
-      if (!question) {
-        out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 请先输入问题</span>';
-        return;
-      }
-      out.innerHTML = '<span style="color:var(--gold)">⏳ 正在召集三位嘉宾讨论中 ...</span>';
-      try {
-        const res = await fetch('/api/tools/roundtable', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail ? `${data.error} — ${data.detail}` : data.error);
-        const result = data.result?.result || JSON.stringify(data.result);
-        out.innerHTML = `<div style="white-space:pre-wrap;color:var(--text);font-family:var(--font-mono);font-size:0.9rem;">${escapeHtml(result)}</div>`;
-        showToast('🎙️ 讨论结束，结果已出', 'success');
-      } catch (e) {
-        out.innerHTML = `<span style="color:var(--vermillion)">⚠️ ${escapeHtml(e.message)}</span>`;
-        showToast('讨论失败: ' + e.message, 'error');
-      }
+      if (out) out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 离线版本 · 此功能需要启动服务端</span>';
     }
-
-    // =============================================
-    // 🔐 脱敏加密审查 — 调用 Dify 工作流
-    // =============================================
-    async function runPrivacy() {
-      const name = document.getElementById('privName').value.trim();
-      const phone = document.getElementById('privPhone').value.trim();
-      const id_card = document.getElementById('privIdcard').value.trim();
-      const remark = document.getElementById('privRemark').value.trim();
+    function runPrivacy() {
+      showToast('📦 离线版本 · 脱敏加密需启动服务端才能使用', 'error');
       const out = document.getElementById('privOutput');
-
-      if (!name || !phone) {
-        out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 姓名和手机号不能为空</span>';
-        return;
-      }
-      out.innerHTML = '<span style="color:var(--gold)">⏳ 正在脱敏加密审查 ...</span>';
-      try {
-        const res = await fetch('/api/tools/privacy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, phone, id_card, remark }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || '请求失败');
-        const result = data.result || JSON.stringify(data);
-        out.innerHTML = `<div style="white-space:pre-wrap;color:var(--text);font-family:var(--font-mono);font-size:0.9rem;">${escapeHtml(result)}</div>`;
-        showToast('🔐 脱敏加密完成', 'success');
-      } catch (e) {
-        out.innerHTML = `<span style="color:var(--vermillion)">⚠️ ${escapeHtml(e.message)}</span>`;
-        showToast('处理失败: ' + e.message, 'error');
-      }
+      if (out) out.innerHTML = '<span style="color:var(--vermillion)">⚠️ 离线版本 · 此功能需要启动服务端</span>';
     }
 
     // =============================================
@@ -2193,12 +2044,10 @@
     // 随机名言
     let quoteTimer = null;
 
-    async function showRandomQuote() {
-      try {
-        const res = await fetch('/api/secret/quote');
-        const data = await res.json();
-        document.getElementById('quoteText').textContent = data.quote;
-        document.getElementById('quoteSource').textContent = '— ' + data.source;
+    function showRandomQuote() {
+      const data = _Q[Math.floor(Math.random() * _Q.length)];
+      document.getElementById('quoteText').textContent = data.quote;
+      document.getElementById('quoteSource').textContent = '— ' + data.source;
         const el = document.getElementById('easterQuote');
         el.classList.add('show');
         // 自动隐藏
@@ -2213,12 +2062,10 @@
     }
 
     // 秘籍面板
-    async function showSecretManual() {
-      try {
-        const res = await fetch('/api/secret/sword');
-        const data = await res.json();
-        document.getElementById('manualTitle').textContent = data.name;
-        document.getElementById('manualBody').textContent = data.desc;
+    function showSecretManual() {
+      const data = _T[Math.floor(Math.random() * _T.length)];
+      document.getElementById('manualTitle').textContent = data.name;
+      document.getElementById('manualBody').textContent = data.desc;
         document.getElementById('manualTech').textContent =
           `🐚 ${data.name.replace(/[··]/g, ' ')}`;
         document.getElementById('secretManual').classList.add('show');
