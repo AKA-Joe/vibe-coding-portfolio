@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -c 'Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\('\\\\''logo.png'\\\\''\\); $bmp = New-Object System.Drawing.Bitmap\\(48, 48\\); $g = [System.Drawing.Graphics]::FromImage\\($bmp\\); $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic; $g.DrawImage\\($img, 0, 0, 48, 48\\); $g.Dispose\\(\\); $bmp.Save\\('\\\\''logo-small.png'\\\\'', [System.Drawing.Imaging.ImageFormat]::Png\\); Write-Output '\\\\''Done 48x48'\\\\''')",
+      "Bash(powershell -c 'Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\('\\\\''logo.png'\\\\''\\); $bmp = New-Object System.Drawing.Bitmap\\(200, 200\\); $g = [System.Drawing.Graphics]::FromImage\\($bmp\\); $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic; $g.DrawImage\\($img, 0, 0, 200, 200\\); $g.Dispose\\(\\); $bmp.Save\\('\\\\''logo-watermark.png'\\\\'', [System.Drawing.Imaging.ImageFormat]::Png\\); Write-Output '\\\\''Done 200x200'\\\\''')"
+    ]
+  }
+}
