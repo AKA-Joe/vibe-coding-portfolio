@@ -64,9 +64,9 @@ app.post('/api/tools/md-to-html', (req, res) => {
 // 🎙️ 工具：Dify — AI 圆桌派（投票决策）
 // ============================================
 
-const DIFY_API_KEY_RT = process.env.DIFY_API_KEY_RT || 'app-O3jXoRtyLqifSUu7IUTjIMlu';
-const DIFY_API_KEY_PRIV = process.env.DIFY_API_KEY_PRIV || 'app-WVsPMAh3DXTp1n4kmq4aClJp';
-const DIFY_BASE_URL = process.env.DIFY_BASE_URL || 'http://localhost';
+const DIFY_API_KEY_RT = process.env.DIFY_API_KEY_RT || 'app-t40DHSq7nyad6bVkx1r1Sjyn';
+const DIFY_API_KEY_PRIV = process.env.DIFY_API_KEY_PRIV || 'app-6jpOqIRzijnXDHs7UGIXEDP6';
+const DIFY_BASE_URL = process.env.DIFY_BASE_URL || 'https://api.dify.ai/v1';
 
 app.post('/api/tools/roundtable', async (req, res) => {
   try {
