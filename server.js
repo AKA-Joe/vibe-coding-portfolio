@@ -178,8 +178,8 @@ app.post('/api/tools/stability-test', async (req, res) => {
     const modelList = models.split(/[,，、]/).map(m => m.trim()).filter(Boolean);
     if (!modelList.length) return res.status(400).json({ error: '至少指定一个模型' });
 
-    const maxR = Math.min(requests, 30);
-    const maxC = Math.min(concurrency, 10);
+    const maxR = Math.min(requests, 200);
+    const maxC = Math.min(concurrency, 50);
     const results = {};
 
     async function sendOne(model, id) {
