@@ -914,6 +914,22 @@
     .terminal-title {
       margin-left: 8px;
     }
+    .terminal-desc {
+      padding: 8px 16px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+    }
+    .terminal-desc code {
+      background: var(--bg-panel);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--tg-blue);
+    }
 
     .terminal-body {
       padding: 20px;
@@ -1589,6 +1605,7 @@
           </div>
           <span class="terminal-title">📄 md-to-html.sh — 80×24</span>
         </div>
+        <div class="terminal-desc">将 Markdown 快速渲染为 HTML 预览。支持 <code>#</code> 标题、<code>**粗体**</code>、<code>- 列表</code>、<code>`代码`</code> 等常用语法。</div>
         <div class="terminal-body">
           <div class="terminal-prompt">$ cat > input.md &lt;&lt; EOF</div>
           <textarea id="mdInput" placeholder="# 在此输入 Markdown&#10;&#10;**加粗文字**&#10;- 列表项"></textarea>
@@ -1613,6 +1630,7 @@
           </div>
           <span class="terminal-title">🎙️ ai-roundtable.sh — 圆桌派</span>
         </div>
+        <div class="terminal-desc">输入你的问题，由三位 AI 嘉宾（GPT、Claude、DeepSeek）投票决策，给出综合建议。适合头脑风暴、方案选型、日常纠结。</div>
         <div class="terminal-body">
           <div class="terminal-prompt">$ 三位嘉宾已就位，请提问：</div>
           <textarea id="rtInput" placeholder="例：2026年最值得学的编程语言是什么？&#10;例：如何避免写出屎山代码？" style="min-height:80px;"></textarea>
@@ -1636,6 +1654,7 @@
           </div>
           <span class="terminal-title">🔐 privacy-mask.sh — 脱敏加密</span>
         </div>
+        <div class="terminal-desc">对姓名、手机号、身份证号等敏感信息进行脱敏加密审查处理，保护隐私安全。支持附加备注一并审查。</div>
         <div class="terminal-body">
           <div class="terminal-prompt">$ 输入敏感信息：</div>
           <input id="privName" placeholder="姓名" />
@@ -1662,6 +1681,7 @@
           </div>
           <span class="terminal-title">📊 api-stability-monitor.py — 压测工具</span>
         </div>
+        <div class="terminal-desc">对模型 API 进行并发压力测试，统计成功率、P50/P95/P99 延迟、最大/最小耗时。支持多模型对比，上限 <code>200</code> 请求、<code>50</code> 并发。</div>
         <div class="terminal-body">
           <div class="terminal-prompt">$ 配置压测参数：</div>
           <input id="stUrl" placeholder="API 地址 https://xxx/v1/chat/completions" />
@@ -1698,6 +1718,7 @@
           </div>
           <span class="terminal-title">📒 saved-messages — 已保存</span>
         </div>
+        <div class="terminal-desc">记录你的开发心得、武功秘籍、踩坑笔记。保存在服务端，重启不丢失。</div>
         <div class="terminal-body">
           <div class="terminal-prompt">$ vim note.md</div>
           <input id="noteTitle" placeholder="标题 / 招数名" />
