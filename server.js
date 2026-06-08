@@ -73,7 +73,7 @@ app.post('/api/tools/roundtable', async (req, res) => {
     const { question } = req.body;
     if (!question) return res.status(400).json({ error: '问题不能为空' });
 
-    const resp = await fetch(`${DIFY_BASE_URL}/v1/workflows/run`, {
+    const resp = await fetch(`${DIFY_BASE_URL}/workflows/run`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DIFY_API_KEY_RT}`,
@@ -112,7 +112,7 @@ app.post('/api/tools/privacy', async (req, res) => {
     const { name, phone, id_card, remark } = req.body;
     if (!name || !phone) return res.status(400).json({ error: '姓名和手机号不能为空' });
 
-    const resp = await fetch(`${DIFY_BASE_URL}/v1/workflows/run`, {
+    const resp = await fetch(`${DIFY_BASE_URL}/workflows/run`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DIFY_API_KEY_PRIV}`,
