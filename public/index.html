@@ -432,8 +432,9 @@
 
     /* 在线状态指示器 */
     .hero-status {
-      display: inline-flex;
+      display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       padding: 4px 16px;
       background: var(--bg-card);
@@ -442,7 +443,6 @@
       font-size: 0.78rem;
       color: var(--text-secondary);
       margin-bottom: 20px;
-      align-self: center;
     }
     .hero-status .dot {
       width: 8px; height: 8px;
