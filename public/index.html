@@ -4,7 +4,7 @@
   【离线版本】剑客·码者 个人官网
   ============================================================
   说明：本版本为纯前端离线包，双击 index.html 即可浏览。
-  如需完整功能（笔记、Dify 工具等），请启动服务端：
+  离线预览版 · Dify 工具直接调用云端 API，无需启动服务端：
     npm install && npm start
   或访问线上版：https://vibe-coding-portfolio-production-fc72.up.railway.app
   ============================================================ -->
@@ -1356,9 +1356,7 @@
         <li><a href="#skills" data-icon="⚡">技能</a></li>
         <li><a href="#projects" data-icon="📦">项目</a></li>
         <li><a href="#timeline" data-icon="📅">历程</a></li>
-        
-        
-        <li>
+        <li><a href="#tools" data-icon="🛠">工具</a></li>
           <button class="tg-theme-btn" id="themeToggle" aria-label="切换主题">🌙</button>
         </li>
       </ul>
@@ -1442,7 +1440,64 @@
     </div>
   </section>
 
-  <!-- ========== 🥷 彩蛋元素 ========== -->
+
+  <!-- ========== 工具 ========== -->
+  <section class="section" id="tools">
+    <div class="container">
+      <h2 class="section-title reveal">· 法器炼丹 ·</h2>
+
+      <!-- 🎙️ Dify — AI 圆桌派 -->
+      <div class="terminal-box reveal">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+          </div>
+          <span class="terminal-title">🎙️ ai-roundtable.sh — 圆桌派</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-prompt">$ 三位嘉宾已就位，请提问：</div>
+          <textarea id="rtInput" placeholder="例：2026年最值得学的编程语言是什么？" style="min-height:80px;"></textarea>
+          <div class="terminal-btns">
+            <button class="term-btn term-btn-blue" onclick="runRoundtable()">🎤 发起讨论</button>
+          </div>
+          <div class="terminal-prompt">$ 嘉宾讨论结果：</div>
+          <div class="term-output" id="rtOutput">
+            <span style="color:var(--text-dim)">_ 等待提问 ...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔐 Dify — 脱敏加密审查 -->
+      <div class="terminal-box reveal" style="margin-top:24px;">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+          </div>
+          <span class="terminal-title">🔐 privacy-mask.sh — 脱敏加密</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-prompt">$ 输入敏感信息：</div>
+          <input id="privName" placeholder="姓名" />
+          <input id="privPhone" placeholder="手机号" />
+          <input id="privIdcard" placeholder="身份证号（可选）" />
+          <input id="privRemark" placeholder="备注（可选）" />
+          <div class="terminal-btns">
+            <button class="term-btn term-btn-blue" onclick="runPrivacy()">🔐 脱敏加密</button>
+          </div>
+          <div class="terminal-prompt">$ 处理结果：</div>
+          <div class="term-output" id="privOutput">
+            <span style="color:var(--text-dim)">_ 等待输入 ...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- ========== 🥷 彩蛋元素 ========== -->
   <!-- 秘籍弹窗 -->
   <div class="manual-overlay" id="manualOverlay"></div>
   <div class="secret-manual" id="secretManual">
