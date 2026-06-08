@@ -332,6 +332,48 @@
       position: relative;
       padding-top: 56px;
       z-index: 1;
+      overflow: hidden;
+    }
+
+    /* Hero 背景画像 */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      opacity: 0.25;
+      filter: grayscale(0.3) saturate(0.8);
+      transition: transform 0.1s linear;
+    }
+    [data-theme="light"] .hero-bg img {
+      opacity: 0.12;
+      filter: grayscale(0.5) saturate(0.5) brightness(1.3);
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+        rgba(10,10,10,0.7) 0%,
+        rgba(10,10,10,0.15) 30%,
+        rgba(10,10,10,0.15) 70%,
+        rgba(10,10,10,0.85) 100%
+      );
+      pointer-events: none;
+    }
+    [data-theme="light"] .hero-bg::after {
+      background: linear-gradient(180deg,
+        rgba(245,240,232,0.75) 0%,
+        rgba(245,240,232,0.1) 30%,
+        rgba(245,240,232,0.1) 70%,
+        rgba(245,240,232,0.85) 100%
+      );
     }
 
     .hero-content {
@@ -1317,6 +1359,10 @@
 
   <!-- ========== Hero ========== -->
   <section class="hero" id="about">
+    <!-- Hero 背景画像 -->
+    <div class="hero-bg" id="heroBg">
+      <img src="/神女惊世.png" alt="神女惊世" loading="eager">
+    </div>
     <div class="container hero-content">
       <!-- 印章 -->
       <div class="hero-seal">
@@ -2247,12 +2293,32 @@
     }
 
     // =============================================
+    // Hero 背景画像随鼠标微动（视差）
+    // =============================================
+    function initHeroParallax() {
+      const bg = document.getElementById('heroBg');
+      if (!bg) return;
+      const img = bg.querySelector('img');
+      if (!img) return;
+      bg.addEventListener('mousemove', (e) => {
+        const rect = bg.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        img.style.transform = `translate(${x * -12}px, ${y * -12}px) scale(1.05)`;
+      });
+      bg.addEventListener('mouseleave', () => {
+        img.style.transform = '';
+      });
+    }
+
+    // =============================================
     // 初始化
     // =============================================
     document.addEventListener('DOMContentLoaded', () => {
       initCodeRain();
       initLogoParticles();
       initTypewriter();
+      initHeroParallax();
       renderSkills();
       renderProjects();
       renderTimeline();
