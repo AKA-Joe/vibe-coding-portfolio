@@ -1653,11 +1653,12 @@
           <input id="stUrl" placeholder="API 地址 https://xxx/v1/chat/completions" />
           <input id="stKey" placeholder="API Key sk-xxx" type="password" />
           <input id="stModels" placeholder='模型名称，逗号/顿号分隔，如 gpt-4o-mini,deepseek-chat' />
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-            <input id="stRequests" placeholder="请求数（默认10）" style="flex:1;min-width:80px;" />
-            <input id="stConcurrency" placeholder="并发（默认3）" style="flex:1;min-width:80px;" />
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+            <input id="stRequests" placeholder="请求数（默认10，上限200）" style="flex:1;min-width:80px;" />
+            <input id="stConcurrency" placeholder="并发（默认3，上限50）" style="flex:1;min-width:80px;" />
             <input id="stTimeout" placeholder="超时秒（默认30）" style="flex:1;min-width:80px;" />
           </div>
+          <div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:12px;text-align:right;">⚠️ 请求数 ≤ 200，并发 ≤ 50</div>
           <div class="terminal-btns">
             <button class="term-btn term-btn-blue" onclick="runStabilityTest()">🚀 开始压测</button>
           </div>
