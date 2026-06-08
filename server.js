@@ -167,6 +167,94 @@ app.post('/api/tools/privacy', async (req, res) => {
 });
 
 // ============================================
+// 📊 工具：API 稳定性压力测试
+// ============================================
+
+app.post('/api/tools/stability-test', async (req, res) => {
+  try {
+    const { url, key, models, requests = 10, concurrency = 3, timeout = 30 } = req.body;
+    if (!url || !key || !models) return res.status(400).json({ error: 'API地址、Key和模型不能为空' });
+
+    const modelList = models.split(',').map(m => m.trim()).filter(Boolean);
+    if (!modelList.length) return res.status(400).json({ error: '至少指定一个模型' });
+
+    const maxR = Math.min(requests, 30);
+    const maxC = Math.min(concurrency, 10);
+    const results = {};
+
+    async function sendOne(model, id) {
+      const start = performance.now();
+      let success = false, statusCode = null, errorType = null;
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'user', content: 'Reply with OK.' }],
+            max_tokens: 10,
+            temperature: 0
+          }),
+          signal: AbortSignal.timeout(timeout * 1000)
+        });
+        statusCode = resp.status;
+        success = resp.status === 200;
+        if (!success) errorType = `HTTP ${resp.status}`;
+      } catch (e) {
+        errorType = e.name === 'TimeoutError' ? 'Timeout' : e.name || 'Error';
+      }
+      const latency = (performance.now() - start) / 1000;
+      return { id, model, success, latency: +latency.toFixed(3), statusCode, errorType };
+    }
+
+    for (const model of modelList) {
+      const allResults = [];
+      const pool = [];
+      let nextId = 0;
+      for (let i = 0; i < maxR; i++) {
+        pool.push(async () => sendOne(model, nextId++));
+      }
+      const workers = [];
+      for (let w = 0; w < maxC; w++) workers.push(runWorker(pool, allResults));
+      await Promise.all(workers);
+
+      const latencies = allResults.filter(r => r.success).map(r => r.latency).sort((a, b) => a - b);
+      const total = allResults.length;
+      const successCount = allResults.filter(r => r.success).length;
+      const rate = total > 0 ? (successCount / total * 100) : 0;
+      const errMap = {};
+      allResults.filter(r => !r.success).forEach(r => { errMap[r.errorType] = (errMap[r.errorType] || 0) + 1; });
+      const avg = latencies.length ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0;
+      const p50 = latencies[Math.floor(latencies.length * 0.5)] || 0;
+      const p95 = latencies[Math.floor(latencies.length * 0.95)] || latencies[latencies.length - 1] || 0;
+      const p99 = latencies[Math.floor(latencies.length * 0.99)] || latencies[latencies.length - 1] || 0;
+
+      results[model] = {
+        total, successCount, failedCount: total - successCount,
+        successRate: +rate.toFixed(1),
+        avgLatency: +avg.toFixed(3),
+        p50: +p50.toFixed(3), p95: +p95.toFixed(3), p99: +p99.toFixed(3),
+        minLatency: +((latencies[0] || 0).toFixed(3)),
+        maxLatency: +((latencies[latencies.length - 1] || 0).toFixed(3)),
+        errors: errMap,
+        details: allResults
+      };
+    }
+    res.json({ models: results });
+
+    async function runWorker(pool, results) {
+      while (pool.length) {
+        const task = pool.shift();
+        const r = await task();
+        results.push(r);
+      }
+    }
+  } catch (err) {
+    res.status(500).json({ error: '压测执行失败', detail: err.message });
+  }
+});
+
+// ============================================
 // 工具：学习时间线生成
 // ============================================
 
