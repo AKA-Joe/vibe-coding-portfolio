@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="dark">
-<!-- ============================================================
-  【离线版本】剑客·码者 个人官网
-  ============================================================
-  说明：本版本为纯前端离线包，双击 index.html 即可浏览。
-  如需完整功能（笔记、Dify 工具等），请启动服务端：
-    npm install && npm start
-  或访问线上版：https://vibe-coding-portfolio-production-fc72.up.railway.app
-  ============================================================ -->
+<!-- 离线版（已移除工具/Dify/笔记），双击即可浏览 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>剑客·码者 | 个人官网</title>
+  <title>剑客·码者（离线版）</title>
   <!-- Google Fonts: 书法体 + 等宽体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="apple-touch-icon" href="/logo.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/logo-small.png">
+  <link rel="apple-touch-icon" sizes="48x48" href="/logo-small.png">
+  <!-- 控制台彩蛋（F12即可见，零影响） -->
+  <script src="/console-egg.js" defer></script>
   <style>
     /* ============================================
        CSS 变量 — 深色主题（墨黑）
@@ -146,7 +141,7 @@
       transform: translate(-50%, -50%);
       width: min(60vw, 360px);
       height: min(60vw, 360px);
-      background: url('/logo.png') center/contain no-repeat;
+      background: url('/logo-watermark.png') center/contain no-repeat;
       opacity: 0.07;
       filter: blur(12px) saturate(0.6);
       pointer-events: none;
@@ -343,41 +338,57 @@
       overflow: hidden;
     }
 
-    /* Hero 背景画像 */
+    /* Hero 背景画像 — 聚光灯方案 */
     .hero-bg {
       position: absolute;
       inset: 0;
       z-index: -1;
       overflow: hidden;
+      background-color: #050505;
+      background-image: url('/hero-bg.jpg');
+      background-size: cover;
+      background-position: center 30%;
+      background-repeat: no-repeat;
     }
-    .hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 30%;
-      opacity: 0.25;
-      filter: grayscale(0.3) saturate(0.8);
-      transition: transform 0.1s linear;
-    }
-    [data-theme="light"] .hero-bg img {
-      opacity: 0.12;
-      filter: grayscale(0.5) saturate(0.5) brightness(1.3);
-    }
-    .hero-bg::after {
+    /* 暗色模式：四周深黑渐变 → 中心半透，形成聚光效果 */
+    .hero-bg::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg,
-        rgba(10,10,10,0.7) 0%,
-        rgba(10,10,10,0.15) 30%,
-        rgba(10,10,10,0.15) 70%,
-        rgba(10,10,10,0.85) 100%
+      background: radial-gradient(
+        ellipse 70% 55% at 50% 45%,
+        rgba(10,10,10,0.30) 0%,
+        rgba(10,10,10,0.60) 40%,
+        rgba(10,10,10,0.88) 75%,
+        rgba(5,5,5,1) 100%
       );
       pointer-events: none;
     }
-    [data-theme="light"] .hero-bg::after {
-      background: linear-gradient(180deg,
-        rgba(245,240,232,0.75) 0%,
+    /* 浅色模式：宣纸白全面覆盖，仅微透图影 */
+    [data-theme="light"] .hero-bg {
+      background-color: #f5f0e8;
+    }
+    [data-theme="light"] .hero-bg::before {
+      background: radial-gradient(
+        ellipse 70% 60% at 50% 45%,
+        rgba(245,240,232,0.25) 0%,
+        rgba(245,240,232,0.55) 40%,
+        rgba(245,240,232,0.90) 75%,
+        rgba(245,240,232,1) 100%
+      );
+    }
+
+    /* 暗色模式 Hero 文字提亮 */
+    [data-theme="dark"] .hero-calligraphy {
+      color: #f0ece4;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.8), 0 0 60px rgba(0,0,0,0.4);
+    }
+    [data-theme="dark"] .hero-typewriter-text {
+      color: #c8c4bc;
+    }
+    [data-theme="dark"] .hero-bio {
+      color: #b8b4ac;
+    }
         rgba(245,240,232,0.1) 30%,
         rgba(245,240,232,0.1) 70%,
         rgba(245,240,232,0.85) 100%
@@ -387,13 +398,18 @@
     .hero-content {
       text-align: center;
       max-width: 700px;
-      padding: 40px 0;
+      padding: 40px 20px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     /* 印章 */
     .hero-seal {
       width: 80px; height: 80px;
-      margin: 0 auto 28px;
+      margin-bottom: 28px;
       border: 3px solid var(--vermillion);
       display: flex;
       align-items: center;
@@ -417,8 +433,9 @@
 
     /* 在线状态指示器 */
     .hero-status {
-      display: inline-flex;
+      display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       padding: 4px 16px;
       background: var(--bg-card);
@@ -448,6 +465,7 @@
       line-height: 1.2;
       margin-bottom: 8px;
       position: relative;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.6);
     }
     .hero-calligraphy .highlight {
       color: var(--tg-blue);
@@ -494,6 +512,7 @@
       font-family: var(--font-mono);
       font-size: 0.9rem;
       height: 1.6em;
+      text-align: center;
     }
     .hero-typewriter-area .prefix {
       color: var(--tg-green);
@@ -896,6 +915,22 @@
     .terminal-title {
       margin-left: 8px;
     }
+    .terminal-desc {
+      padding: 8px 16px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+    }
+    .terminal-desc code {
+      background: var(--bg-panel);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--tg-blue);
+    }
 
     .terminal-body {
       padding: 20px;
@@ -1108,6 +1143,64 @@
       color: var(--text-dim);
     }
     .footer-code .green { color: var(--tg-green); }
+
+    .footer-meme {
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      position: relative;
+      display: inline-block;
+      cursor: default;
+    }
+    .footer-meme .meme-trigger {
+      color: var(--text-dim);
+      opacity: 0.5;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .footer-meme:hover .meme-trigger {
+      opacity: 1;
+      color: var(--vermillion);
+    }
+    .footer-meme .meme-popup {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: 10;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    .footer-meme .meme-popup::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--border);
+    }
+    .footer-meme:hover .meme-popup {
+      display: block;
+    }
+    .meme-popup .meme-shout {
+      color: var(--vermillion);
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .meme-popup .meme-reply {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
 
     /* ============================================
        彩蛋 — 武林秘籍弹出层
@@ -1329,6 +1422,121 @@
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ============================================
+       回到顶部按钮
+       ============================================ */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 50%;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 999;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-card);
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .back-to-top:hover {
+      color: var(--tg-blue);
+      border-color: var(--tg-blue);
+      box-shadow: var(--tg-blue-glow);
+      transform: translateY(-3px);
+    }
+
+    /* ============================================
+       快捷键面板
+       ============================================ */
+    .shortcut-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .shortcut-overlay.show { display: flex; }
+    .shortcut-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .shortcut-panel h3 {
+      font-family: var(--font-calligraphy);
+      font-size: 1.4rem;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--gold);
+    }
+    .shortcut-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .shortcut-row:last-child { border-bottom: none; }
+    .shortcut-key {
+      display: inline-block;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      padding: 2px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--tg-blue);
+    }
+    .shortcut-desc { color: var(--text-secondary); }
+    .shortcut-close {
+      display: block;
+      margin: 16px auto 0;
+      padding: 8px 28px;
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .shortcut-close:hover {
+      border-color: var(--tg-blue);
+      color: var(--tg-blue);
+    }
+
+    /* ============================================
+       访问计数器
+       ============================================ */
+    .visit-count {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+      text-align: center;
+      font-family: var(--font-mono);
+    }
   </style>
 </head>
 <body>
@@ -1368,9 +1576,7 @@
   <!-- ========== Hero ========== -->
   <section class="hero" id="about">
     <!-- Hero 背景画像 -->
-    <div class="hero-bg" id="heroBg">
-      <img src="/hero-bg.jpg" alt="神女惊世" loading="eager">
-    </div>
+    <div class="hero-bg" id="heroBg"></div>
     <div class="container hero-content">
       <!-- 印章 -->
       <div class="hero-seal">
@@ -1402,6 +1608,9 @@
       <div class="hero-actions">
         <a href="#projects" class="tg-btn tg-btn-primary">
           查看项目 →
+        </a>
+        <a href="#tools" class="tg-btn tg-btn-outline">
+          体验工具
         </a>
       </div>
     </div>
@@ -1442,31 +1651,25 @@
     </div>
   </section>
 
-  <!-- ========== 🥷 彩蛋元素 ========== -->
-  <!-- 秘籍弹窗 -->
-  <div class="manual-overlay" id="manualOverlay"></div>
-  <div class="secret-manual" id="secretManual">
-    <div class="manual-seal"><span>秘</span></div>
-    <div class="manual-title" id="manualTitle">独孤九剑</div>
-    <div class="manual-body" id="manualBody">以无招胜有招，破尽天下代码 Bug</div>
-    <div class="manual-tech" id="manualTech">$ git push --force-with-lease</div>
-    <button class="manual-close" onclick="closeSecret()">✕ 收招</button>
-  </div>
-  <!-- 浮动名言 -->
-  <div class="easter-egg-quote" id="easterQuote">
-    <button class="q-close" onclick="closeQuote()">✕</button>
-    <div class="q-text" id="quoteText">侠之大者，为国为民</div>
-    <div class="q-source" id="quoteSource">金庸《神雕侠侣》</div>
-  </div>
-
   <!-- ========== 页脚 ========== -->
   <footer class="footer">
     <div class="container">
       <div class="footer-qoute">以键盘为剑 · 以代码为招</div>
       <div class="footer-seal"><span>码</span></div>
       <div class="footer-code"><span class="green">>_</span> Vibe Coding · <span id="footerYear">2025</span></div>
+      <div class="footer-meme" onclick="showToast('😠 你为啥直接 commit 到我的 master 分支啊！！！\n\n📜 版本沿革：\nv1-basic 😠 你为什么直接commit到我的master分支！！！\nv2-dify  😰 这次我创feature分支了！\nv3-full  😎 算了直接merge回main吧','info',5000)">
+        <span class="meme-trigger">🔖 版本谱</span>
+        <div class="meme-popup">
+          <div class="meme-shout">😠 你为啥直接 commit 到我的 master 分支啊！！！</div>
+          <div class="meme-reply">v1→main ← 直接commit / v2→feature / v3→main 😎 算了merge吧</div>
+        </div>
+      </div>
+      <div class="visit-count">👁️ 已有 <span id="visitCount">--</span> 位大侠到此一游 &nbsp;·&nbsp; ⌨️ 按 <span style="border:1px solid var(--text-dim);padding:0 6px;border-radius:3px;font-size:0.7rem;cursor:pointer" onclick="toggleShortcuts()">?</span> 查看剑诀</div>
     </div>
   </footer>
+
+  <!-- 回到顶部按钮 -->
+  <button class="back-to-top" id="backToTop" aria-label="回到顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
 
   <script>
     // =============================================
@@ -1891,22 +2094,36 @@
     }
 
     // =============================================
-    // 笔记 CRUD — 【离线版】：仅显示提示
+    // 笔记 CRUD
     // =============================================
-    /* OFFLINE: 笔记功能需要服务端，以下为占位函数 */
-    function loadNotes() {}
-    function createNote() {}
+  // [离线版移除] loadNotes
+
+  // [离线版移除] createNote
+
+  // [离线版移除] deleteNote
+
+    function escapeHtml(text) {
+      const d = document.createElement('div');
+      d.textContent = text;
+      return d.innerHTML;
+    }
 
     // =============================================
     // Markdown 转换
     // =============================================
-    function convertMarkdown() { showToast("📦 离线版本"); }
+  // [离线版移除] convertMarkdown
 
-    function clearMarkdown() {}
+  // [离线版移除] clearMarkdown
 
-    /* OFFLINE: 以下函数在离线版中仅显示提示，需启动服务端 */
-    function runRoundtable() {}
-    function runPrivacy() {}
+    // =============================================
+    // 🎙️ AI 圆桌派 — 调用 Dify 工作流
+    // =============================================
+  // [离线版移除] runRoundtable
+
+    // =============================================
+    // 🔐 脱敏加密审查 — 调用 Dify 工作流
+    // =============================================
+  // [离线版移除] runPrivacy
 
     // =============================================
     // 主题切换
@@ -1953,10 +2170,12 @@
     // 随机名言
     let quoteTimer = null;
 
-    function showRandomQuote() {
-      const data = _Q[Math.floor(Math.random() * _Q.length)];
-      document.getElementById('quoteText').textContent = data.quote;
-      document.getElementById('quoteSource').textContent = '— ' + data.source;
+    async function showRandomQuote() {
+      try {
+        const res = await fetch('/api/secret/quote');
+        const data = await res.json();
+        document.getElementById('quoteText').textContent = data.quote;
+        document.getElementById('quoteSource').textContent = '— ' + data.source;
         const el = document.getElementById('easterQuote');
         el.classList.add('show');
         // 自动隐藏
@@ -1971,10 +2190,12 @@
     }
 
     // 秘籍面板
-    function showSecretManual() {
-      const data = _T[Math.floor(Math.random() * _T.length)];
-      document.getElementById('manualTitle').textContent = data.name;
-      document.getElementById('manualBody').textContent = data.desc;
+    async function showSecretManual() {
+      try {
+        const res = await fetch('/api/secret/sword');
+        const data = await res.json();
+        document.getElementById('manualTitle').textContent = data.name;
+        document.getElementById('manualBody').textContent = data.desc;
         document.getElementById('manualTech').textContent =
           `🐚 ${data.name.replace(/[··]/g, ' ')}`;
         document.getElementById('secretManual').classList.add('show');
@@ -1992,15 +2213,7 @@
 
     // 初始化彩蛋
     function initEasterEggs() {
-      
-  console.log('%c╔══════════════════════════════════════════════╗', 'color: #d4a547');
-  console.log('%c║  你为什么直接 commit 到我的 master 分支！！！║', 'color: #ff5f57; font-weight: bold');
-  console.log('%c╠══════════════════════════════════════════════╣', 'color: #d4a547');
-  console.log('%c║  开个玩笑，这只是个离线预览版                ║', 'color: #8a8a8a');
-  console.log('%c║  来都来了，按 Q 键领一句江湖名言再走吧        ║', 'color: #8a8a8a');
-  console.log('%c╚══════════════════════════════════════════════╝', 'color: #d4a547');
-
-    // 🥷 Console 彩蛋 — 隐藏秘籍
+      // 🥷 Console 彩蛋 — 隐藏秘籍
       const consoleStyle = 'color: #d4a547; font-size: 14px; font-weight: bold;';
       const consoleSub = 'color: #8a8a8a; font-size: 11px;';
       const consoleGreen = 'color: #00ff41; font-size: 11px;';
@@ -2017,6 +2230,9 @@
       console.log('%c║  页面双击 → 触发奇遇                  ║', consoleGreen);
       console.log('%c║  页脚印章悬停 → 神功自现              ║', consoleGreen);
       console.log('%c║                                      ║', consoleSub);
+      console.log('%c║  😠 你为啥直接 commit 到我的 master    ║', consoleGreen);
+      console.log('%c║  分支啊！！！→ 页脚「版本谱」        ║', consoleGreen);
+      console.log('%c║                                      ║', consoleSub);
       console.log('%c╚══════════════════════════════════════╝', consoleStyle);
 
       // 键盘快捷键: Q 键显示名言, M 键显示秘籍
@@ -2028,6 +2244,9 @@
         }
         if (e.key === 'm' || e.key === 'M') {
           showSecretManual();
+        }
+        if (e.key === '?' || (e.key === 'Escape' && document.getElementById('shortcutOverlay').classList.contains('show'))) {
+          document.getElementById('shortcutOverlay').classList.toggle('show');
         }
       });
 
@@ -2062,21 +2281,41 @@
     function initHeroParallax() {
       const bg = document.getElementById('heroBg');
       if (!bg) return;
-      const img = bg.querySelector('img');
-      if (!img) return;
       bg.addEventListener('mousemove', (e) => {
         const rect = bg.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-        img.style.transform = `translate(${x * -12}px, ${y * -12}px) scale(1.05)`;
+        bg.style.backgroundPosition = `calc(50% + ${x * -8}px) calc(30% + ${y * -8}px)`;
       });
       bg.addEventListener('mouseleave', () => {
-        img.style.transform = '';
+        bg.style.backgroundPosition = '';
       });
     }
 
     // =============================================
-    // 初始化
+    // 快捷键面板
+    // =============================================
+    function toggleShortcuts(e) {
+      if (e && e.target !== document.getElementById('shortcutOverlay')) return;
+      document.getElementById('shortcutOverlay').classList.toggle('show');
+    }
+    function hideShortcuts() {
+      document.getElementById('shortcutOverlay').classList.remove('show');
+    }
+
+    // =============================================
+    // 📊 API 稳定性压测
+    // =============================================
+    function escapeHtml(t) {
+      const d = document.createElement('div');
+      d.textContent = t;
+      return d.innerHTML;
+    }
+
+  // [离线版移除] runStabilityTest
+
+    // =============================================
+    // 主题切换
     // =============================================
     document.addEventListener('DOMContentLoaded', () => {
       initCodeRain();
@@ -2092,15 +2331,27 @@
       initScrollProgress();
       initTheme();
       initMobileMenu();
-      initEasterEggs();
-      loadNotes();
+      initEasterEggs();  // loadNotes() [离线版移除]
       // 页脚年份自动更新
       document.getElementById('footerYear').textContent = new Date().getFullYear();
 
+      // ⬆️ 回到顶部按钮 — 滚动超过 300px 显示
+      const backBtn = document.getElementById('backToTop');
+      window.addEventListener('scroll', () => {
+        backBtn.classList.toggle('visible', window.scrollY > 300);
+      }, { passive: true });
+
+      // 👁️ 访问计数
+      fetch('/api/visits')
+        .then(r => r.json())
+        .then(d => { document.getElementById('visitCount').textContent = d.count; })
+        .catch(() => {});
+
       document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
-      document.getElementById('mdInput').addEventListener('keydown', (e) => {
-        });
+      document.getElementById('mdInput')?.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { /* convertMarkdown [离线版移除] */ }
+      });
     });
   </script>
 </body>
